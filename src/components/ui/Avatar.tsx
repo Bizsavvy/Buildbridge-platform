@@ -11,9 +11,9 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
   ({ className, src, name, size = "md", ...props }, ref) => {
     
     const sizeStyles = {
-      sm: "h-8 w-8 text-body-small",
-      md: "h-12 w-12 text-body-medium",
-      lg: "h-16 w-16 text-headline-small",
+      sm: "h-8 w-8 text-sm",
+      md: "h-12 w-12 text-base",
+      lg: "h-16 w-16 text-xl",
     };
 
     const getInitials = (n?: string) => {
@@ -25,7 +25,7 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          "relative flex shrink-0 overflow-hidden rounded-full bg-surface-variant text-on-surface-variant",
+          "relative flex shrink-0 overflow-hidden rounded-full bg-slate-100 text-slate-600",
           sizeStyles[size],
           className
         )}
@@ -37,7 +37,6 @@ const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             alt={name || "Avatar"}
             className="aspect-square h-full w-full object-cover"
             onError={(e) => {
-               // Fallback if image fails
                e.currentTarget.style.display = 'none';
             }}
           />

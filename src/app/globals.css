@@ -1,3 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--color-material-theme-sys-light-primary);
+  --color-on-primary: var(--color-material-theme-sys-light-on-primary);
+  --color-primary_container: var(--color-material-theme-sys-light-primary_container);
+  --color-on-primary-container: var(--color-material-theme-sys-light-on-primary-container);
+  
+  --color-secondary: var(--color-material-theme-sys-light-secondary);
+  --color-on-secondary: var(--color-material-theme-sys-light-on-secondary);
+  --color-secondary_container: var(--color-material-theme-sys-light-secondary_container);
+  --color-on-secondary-container: var(--color-material-theme-sys-light-on-secondary-container);
+  
+  --color-tertiary: var(--color-material-theme-sys-light-tertiary);
+  --color-on-tertiary: var(--color-material-theme-sys-light-on-tertiary);
+  --color-tertiary_container: var(--color-material-theme-sys-light-tertiary_container);
+  --color-on-tertiary-container: var(--color-material-theme-sys-light-on-tertiary-container);
+  
+  --color-surface: var(--color-material-theme-sys-light-surface);
+  --color-on-surface: var(--color-material-theme-sys-light-on-surface);
+  --color-surface-variant: var(--color-material-theme-sys-light-surface-variant);
+  --color-on-surface-variant: var(--color-material-theme-sys-light-on-surface-variant);
+  
+  --color-outline: var(--color-material-theme-sys-light-outline);
+  --color-outline-variant: var(--color-material-theme-sys-light-outline-variant);
+  
+  --color-error: var(--color-material-theme-sys-light-error);
+  --color-on-error: var(--color-material-theme-sys-light-on-error);
+
+  --shadow-premium: 0 20px 50px rgba(0,0,0,0.05);
+  --shadow-glass: 0 8px 32px 0 rgba(31,38,135,0.07);
+  --shadow-glass-lg: 0 25px 50px -12px rgba(0,0,0,0.25);
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .glass-dark {
+    background: rgba(15, 15, 23, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  }
+  
+  .glass-card-hover {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+  
+  .glass-card-hover:hover {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-material-theme-sys-light-primary) 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .mesh-bg {
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(101, 85, 143, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.9) 0%, var(--color-material-theme-sys-light-background) 100%);
+  }
+  
+  .mesh-bg-dark {
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(101, 85, 143, 0.1) 0%, transparent 50%),
+      linear-gradient(180deg, var(--color-material-theme-sys-light-background) 0%, #f5f3fa 100%);
+  }
+}
+
 /* Auto-generated from design-tokens.tokens.json */
 :root {
   --color-material-theme-white: #ffffffff;
@@ -792,122 +886,336 @@
   --typography-material-theme-title-small-fontFamily: Roboto;
   --typography-material-theme-title-small-fontWeight: 500px;
   --typography-material-theme-title-small-fontStyle: normal;
+  --primitive-colors-2-color-palette-success-colors-success-100: #ffffffff;
+  --color-roles-2-primary-color-roles-primary: {primitive colors 2.key colors.primary};
+  --color-roles-2-primary-color-roles-on-primary: {primitive colors 2.color palette.primary colors.primary 100};
+  --color-roles-2-primary-color-roles-primary-container: {primitive colors 2.color palette.primary colors.primary 90};
+  --color-roles-2-primary-color-roles-on-primary-container: {primitive colors 2.color palette.primary colors.primary 30};
+  --color-roles-2-secondary-color-roles-secondary: {primitive colors 2.key colors.secondary};
+  --color-roles-2-secondary-color-roles-on-secondary: {primitive colors 2.color palette.secondary colors.secondary 100};
+  --color-roles-2-secondary-color-roles-secondary-container: {primitive colors 2.color palette.secondary colors.secondary 90};
+  --color-roles-2-secondary-color-roles-on-primary-container: {primitive colors 2.color palette.secondary colors.secondary 30};
+  --color-roles-2-tertiary-color-roles-tertiary: {primitive colors 2.key colors.tertiary};
+  --color-roles-2-tertiary-color-roles-on-tertiary: {primitive colors 2.color palette.tertiary colors.tertiary 100};
+  --color-roles-2-tertiary-color-roles-tertiary-container: {primitive colors 2.color palette.tertiary colors.tertiary 90};
+  --color-roles-2-tertiary-color-roles-on-tertiary-container: {primitive colors 2.color palette.tertiary colors.tertiary 30};
+  --color-roles-2-surface-color-roles-surface: {primitive colors 2.color palette.neutral colors.neutral 97};
+  --color-roles-2-surface-color-roles-on-surface: {primitive colors 2.color palette.neutral colors.neutral 10};
+  --color-roles-2-surface-color-roles-surface-variant: {primitive colors 2.color palette.neutral variant.neutral variant 90};
+  --color-roles-2-surface-color-roles-on-surface-variant: {primitive colors 2.color palette.neutral variant.neutral variant 30};
+  --color-roles-2-surface-color-roles-surface-container-highest: {primitive colors 2.color palette.neutral colors.neutral 90};
+  --color-roles-2-surface-color-roles-surface-container-high: {primitive colors 2.color palette.neutral colors.neutral 92};
+  --color-roles-2-surface-color-roles-surface-container: {primitive colors 2.color palette.neutral colors.neutral 94};
+  --color-roles-2-surface-color-roles-surface-container-low: {primitive colors 2.color palette.neutral colors.neutral 96};
+  --color-roles-2-surface-color-roles-surface-container-lowest: {primitive colors 2.color palette.neutral colors.neutral 100};
+  --color-roles-2-surface-color-roles-inverse-surface: {primitive colors 2.color palette.neutral colors.neutral 20};
+  --color-roles-2-surface-color-roles-inverse-on-surface: {primitive colors 2.color palette.neutral colors.neutral 95};
+  --color-roles-2-surface-color-roles-surface-tint: {color roles 2.primary color roles.primary};
+  --color-roles-2-surface-color-roles-surface-tint-color: {color roles 2.primary color roles.primary};
+  --color-roles-2-outline-colors-outline: {primitive colors 2.color palette.neutral variant.neutral variant 50};
+  --color-roles-2-outline-colors-outline-variant: {primitive colors 2.color palette.neutral variant.neutral variant 80};
+  --color-roles-2-error-colors-error: {primitive colors 2.key colors.error};
+  --color-roles-2-error-colors-on-error: {primitive colors 2.color palette.error colors.error 100};
+  --color-roles-2-error-colors-error-container: {primitive colors 2.color palette.error colors.error 90};
+  --color-roles-2-error-colors-on-error-container: {primitive colors 2.color palette.error colors.error 30};
+  --color-roles-2-warning-colors-warning: {primitive colors 2.key colors.warning};
+  --color-roles-2-warning-colors-on-warning: {primitive colors 2.color palette.warning colors.warning 100};
+  --color-roles-2-warning-colors-warning-container: {primitive colors 2.color palette.warning colors.warning 90};
+  --color-roles-2-warning-colors-on-warning-container: {primitive colors 2.color palette.warning colors.warning 30};
+  --color-roles-2-success-colors-success: {primitive colors 2.key colors.success};
+  --color-roles-2-success-colors-on-success: {primitive colors 2.color palette.success colors.success 100};
+  --color-roles-2-success-colors-success-container: {primitive colors 2.color palette.success colors.success 90};
+  --color-roles-2-success-colors-on-success-container: {primitive colors 2.color palette.success colors.success 30};
+  --color-roles-2-accent-color-roles-accent: {primitive colors 2.key colors.accent};
+  --color-roles-2-accent-color-roles-on-accent: {primitive colors 2.color palette.accent colors.accent 100};
+  --color-roles-2-accent-color-roles-accent-container: {primitive colors 2.color palette.accent colors.accent 90};
+  --color-roles-2-accent-color-roles-on-accent-container: {primitive colors 2.color palette.accent colors.accent 30};
+  --material-theme-schemes-primary: #e3d6ffff;
+  --material-theme-schemes-surface-tint: #cfbdfeff;
+  --material-theme-schemes-on-primary: #2b1b52ff;
+  --material-theme-schemes-primary-container: #9887c5ff;
+  --material-theme-schemes-on-primary-container: #000000ff;
+  --material-theme-schemes-secondary: #e3d6ffff;
+  --material-theme-schemes-on-secondary: #2b1b52ff;
+  --material-theme-schemes-secondary-container: #9887c5ff;
+  --material-theme-schemes-on-secondary-container: #000000ff;
+  --material-theme-schemes-tertiary: #ffd0ddff;
+  --material-theme-schemes-on-tertiary: #471228ff;
+  --material-theme-schemes-tertiary-container: #c57b93ff;
+  --material-theme-schemes-on-tertiary-container: #000000ff;
+  --material-theme-schemes-error: #ffd2ceff;
+  --material-theme-schemes-on-error: #481311ff;
+  --material-theme-schemes-error-container: #cc7b74ff;
+  --material-theme-schemes-on-error-container: #000000ff;
+  --material-theme-schemes-background: #141218ff;
+  --material-theme-schemes-on-background: #e6e0e9ff;
+  --material-theme-schemes-surface: #141318ff;
+  --material-theme-schemes-on-surface: #ffffffff;
+  --material-theme-schemes-surface-variant: #48454eff;
+  --material-theme-schemes-on-surface-variant: #e0dae5ff;
+  --material-theme-schemes-outline: #b5b0bbff;
+  --material-theme-schemes-outline-variant: #938f99ff;
+  --material-theme-schemes-shadow: #000000ff;
+  --material-theme-schemes-scrim: #000000ff;
+  --material-theme-schemes-inverse-surface: #e6e1e9ff;
+  --material-theme-schemes-inverse-on-surface: #2b292fff;
+  --material-theme-schemes-inverse-primary: #4e3f77ff;
+  --material-theme-schemes-primary-fixed: #e9ddffff;
+  --material-theme-schemes-on-primary-fixed: #16033dff;
+  --material-theme-schemes-primary-fixed-dim: #cfbdfeff;
+  --material-theme-schemes-on-primary-fixed-variant: #3c2d63ff;
+  --material-theme-schemes-secondary-fixed: #e9ddffff;
+  --material-theme-schemes-on-secondary-fixed: #16033dff;
+  --material-theme-schemes-secondary-fixed-dim: #cfbdfeff;
+  --material-theme-schemes-on-secondary-fixed-variant: #3c2d63ff;
+  --material-theme-schemes-tertiary-fixed: #ffd9e3ff;
+  --material-theme-schemes-on-tertiary-fixed: #2b0013ff;
+  --material-theme-schemes-tertiary-fixed-dim: #ffb0c9ff;
+  --material-theme-schemes-on-tertiary-fixed-variant: #5b2238ff;
+  --material-theme-schemes-surface-dim: #141318ff;
+  --material-theme-schemes-surface-bright: #46434aff;
+  --material-theme-schemes-surface-container-lowest: #08070bff;
+  --material-theme-schemes-surface-container-low: #1e1d22ff;
+  --material-theme-schemes-surface-container: #29272dff;
+  --material-theme-schemes-surface-container-high: #343238ff;
+  --material-theme-schemes-surface-container-highest: #3f3d43ff;
+  --typography-material-theme-display-large-fontSize: 57px;
+  --typography-material-theme-display-large-fontFamily: Roboto;
+  --typography-material-theme-display-large-fontWeight: 400px;
+  --typography-material-theme-display-large-fontStyle: normal;
+  --typography-material-theme-display-large-fontStretch: normal;
+  --typography-material-theme-display-large-letterSpacing: -0.25px;
+  --typography-material-theme-display-large-lineHeight: 64px;
+  --typography-material-theme-display-medium-fontSize: 45px;
+  --typography-material-theme-display-medium-fontFamily: Roboto;
+  --typography-material-theme-display-medium-fontWeight: 400px;
+  --typography-material-theme-display-medium-fontStyle: normal;
+  --typography-material-theme-display-medium-fontStretch: normal;
+  --typography-material-theme-display-medium-letterSpacing: 0px;
+  --typography-material-theme-display-medium-lineHeight: 52px;
+  --typography-material-theme-display-small-fontSize: 36px;
+  --typography-material-theme-display-small-fontFamily: Roboto;
+  --typography-material-theme-display-small-fontWeight: 400px;
+  --typography-material-theme-display-small-fontStyle: normal;
+  --typography-material-theme-display-small-fontStretch: normal;
+  --typography-material-theme-display-small-letterSpacing: 0px;
+  --typography-material-theme-display-small-lineHeight: 44px;
+  --typography-material-theme-headline-large-fontSize: 32px;
+  --typography-material-theme-headline-large-fontFamily: Roboto;
+  --typography-material-theme-headline-large-fontWeight: 400px;
+  --typography-material-theme-headline-large-fontStyle: normal;
+  --typography-material-theme-headline-large-fontStretch: normal;
+  --typography-material-theme-headline-large-letterSpacing: 0px;
+  --typography-material-theme-headline-large-lineHeight: 40px;
+  --typography-material-theme-headline-medium-fontSize: 28px;
+  --typography-material-theme-headline-medium-fontFamily: Roboto;
+  --typography-material-theme-headline-medium-fontWeight: 400px;
+  --typography-material-theme-headline-medium-fontStyle: normal;
+  --typography-material-theme-headline-medium-fontStretch: normal;
+  --typography-material-theme-headline-medium-letterSpacing: 0px;
+  --typography-material-theme-headline-medium-lineHeight: 36px;
+  --typography-material-theme-headline-small-fontSize: 24px;
+  --typography-material-theme-headline-small-fontFamily: Roboto;
+  --typography-material-theme-headline-small-fontWeight: 400px;
+  --typography-material-theme-headline-small-fontStyle: normal;
+  --typography-material-theme-headline-small-fontStretch: normal;
+  --typography-material-theme-headline-small-letterSpacing: 0px;
+  --typography-material-theme-headline-small-lineHeight: 32px;
+  --typography-material-theme-body-large-fontSize: 16px;
+  --typography-material-theme-body-large-fontFamily: Roboto;
+  --typography-material-theme-body-large-fontWeight: 400px;
+  --typography-material-theme-body-large-fontStyle: normal;
+  --typography-material-theme-body-large-fontStretch: normal;
+  --typography-material-theme-body-large-letterSpacing: 0.5px;
+  --typography-material-theme-body-large-lineHeight: 24px;
+  --typography-material-theme-body-medium-fontSize: 14px;
+  --typography-material-theme-body-medium-fontFamily: Roboto;
+  --typography-material-theme-body-medium-fontWeight: 400px;
+  --typography-material-theme-body-medium-fontStyle: normal;
+  --typography-material-theme-body-medium-fontStretch: normal;
+  --typography-material-theme-body-medium-letterSpacing: 0.25px;
+  --typography-material-theme-body-medium-lineHeight: 20px;
+  --typography-material-theme-body-small-fontSize: 12px;
+  --typography-material-theme-body-small-fontFamily: Roboto;
+  --typography-material-theme-body-small-fontWeight: 400px;
+  --typography-material-theme-body-small-fontStyle: normal;
+  --typography-material-theme-body-small-fontStretch: normal;
+  --typography-material-theme-body-small-letterSpacing: 0.4px;
+  --typography-material-theme-body-small-lineHeight: 16px;
+  --typography-material-theme-label-large-fontSize: 14px;
+  --typography-material-theme-label-large-fontFamily: Roboto;
+  --typography-material-theme-label-large-fontWeight: 500px;
+  --typography-material-theme-label-large-fontStyle: normal;
+  --typography-material-theme-label-large-fontStretch: normal;
+  --typography-material-theme-label-large-letterSpacing: 0.1px;
+  --typography-material-theme-label-large-lineHeight: 20px;
+  --typography-material-theme-label-medium-fontSize: 12px;
+  --typography-material-theme-label-medium-fontFamily: Roboto;
+  --typography-material-theme-label-medium-fontWeight: 500px;
+  --typography-material-theme-label-medium-fontStyle: normal;
+  --typography-material-theme-label-medium-fontStretch: normal;
+  --typography-material-theme-label-medium-letterSpacing: 0.5px;
+  --typography-material-theme-label-medium-lineHeight: 16px;
+  --typography-material-theme-label-small-fontSize: 11px;
+  --typography-material-theme-label-small-fontFamily: Roboto;
+  --typography-material-theme-label-small-fontWeight: 500px;
+  --typography-material-theme-label-small-fontStyle: normal;
+  --typography-material-theme-label-small-fontStretch: normal;
+  --typography-material-theme-label-small-letterSpacing: 0.5px;
+  --typography-material-theme-label-small-lineHeight: 16px;
+  --typography-material-theme-title-large-fontSize: 22px;
+  --typography-material-theme-title-large-fontFamily: Roboto;
+  --typography-material-theme-title-large-fontWeight: 400px;
+  --typography-material-theme-title-large-fontStyle: normal;
+  --typography-material-theme-title-large-fontStretch: normal;
+  --typography-material-theme-title-large-letterSpacing: 0px;
+  --typography-material-theme-title-large-lineHeight: 28px;
+  --typography-material-theme-title-medium-fontSize: 16px;
+  --typography-material-theme-title-medium-fontFamily: Roboto;
+  --typography-material-theme-title-medium-fontWeight: 500px;
+  --typography-material-theme-title-medium-fontStyle: normal;
+  --typography-material-theme-title-medium-fontStretch: normal;
+  --typography-material-theme-title-medium-letterSpacing: 0.15px;
+  --typography-material-theme-title-medium-lineHeight: 24px;
+  --typography-material-theme-title-small-fontSize: 14px;
+  --typography-material-theme-title-small-fontFamily: Roboto;
+  --typography-material-theme-title-small-fontWeight: 500px;
+  --typography-material-theme-title-small-fontStyle: normal;
   --typography-material-theme-title-small-fontStretch: normal;
   --typography-material-theme-title-small-letterSpacing: 0.1px;
   --typography-material-theme-title-small-lineHeight: 20px;
 }
 
-/* Basic resets */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: var(--typography-material-theme-body-medium-fontFamily, 'Roboto', sans-serif);
-  background-color: var(--color-material-theme-sys-light-background, #fef7ff);
+  background-color: #ffffff; /* Cleaner white for GoFundMe feel */
   color: var(--color-material-theme-sys-light-on-background, #1d1b20);
 }
 
-/* Typography utility classes */
-.text-display-large {
-  font-size: 57px;
-  line-height: 64px;
-  font-weight: 400;
-  letter-spacing: -0.25px;
-}
+@layer utilities {
+  .mesh-bg {
+    background-color: #ffffff;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(101, 85, 143, 0.1) 0, transparent 50%), 
+      radial-gradient(at 50% 0%, rgba(202, 196, 208, 0.05) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, rgba(103, 80, 164, 0.1) 0, transparent 50%);
+  }
 
-.text-display-medium {
-  font-size: 45px;
-  line-height: 52px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+.glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-gray-200 shadow-glass;
+  }
 
-.text-display-small {
-  font-size: 36px;
-  line-height: 44px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+  .premium-shadow {
+    @apply shadow-premium;
+  }
 
-.text-headline-large {
-  font-size: 32px;
-  line-height: 40px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary to-secondary;
+  }
 
-.text-headline-medium {
-  font-size: 28px;
-  line-height: 36px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+  /* Typography utility classes */
+  .text-display-large {
+    font-size: 57px;
+    line-height: 64px;
+    font-weight: 400;
+    letter-spacing: -0.25px;
+  }
 
-.text-headline-small {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+  .text-display-medium {
+    font-size: 45px;
+    line-height: 52px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
 
-.text-body-large {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-}
+  .text-display-small {
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
 
-.text-body-medium {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-  letter-spacing: 0.25px;
-}
+  .text-headline-large {
+    font-size: 32px;
+    line-height: 40px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
 
-.text-body-small {
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-  letter-spacing: 0.4px;
-}
+  .text-headline-medium {
+    font-size: 28px;
+    line-height: 36px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
 
-.text-label-large {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-}
+  .text-headline-small {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
 
-.text-label-medium {
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
+  .text-body-large {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
 
-.text-label-small {
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
+  .text-body-medium {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    letter-spacing: 0.25px;
+  }
 
-.text-title-large {
-  font-size: 22px;
-  line-height: 28px;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
+  .text-body-small {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    letter-spacing: 0.4px;
+  }
 
-.text-title-medium {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  letter-spacing: 0.15px;
-}
+  .text-label-large {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+  }
 
-.text-title-small {
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-}
+  .text-label-medium {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
 
+  .text-label-small {
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .text-title-large {
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 400;
+    letter-spacing: 0px;
+  }
+
+  .text-title-medium {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+  }
+
+  .text-title-small {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+  }
+}

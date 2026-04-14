@@ -13,7 +13,7 @@ export function BadgeDisplay() {
     { 
       level: 1, 
       criteria: "Onboarding & Profile photo added.", 
-      agg: "Can create first funding request (Need)." 
+      impact: "Can create first funding request (Need)." 
     },
     { 
       level: 2, 

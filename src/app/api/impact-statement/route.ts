@@ -19,7 +19,7 @@ const ratelimit = redis
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.ip ?? "127.0.0.1";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
     
     // 1. Rate Limiting
     if (ratelimit) {

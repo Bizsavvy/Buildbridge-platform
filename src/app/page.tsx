@@ -33,7 +33,7 @@ export default async function Home() {
   // In production, we'd use a dedicated aggregate table or RPC
   
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <div className="flex flex-col w-full overflow-x-hidden pt-24">
       <Hero stats={MOCK_STATS} />
       
       <PartnerLogos />

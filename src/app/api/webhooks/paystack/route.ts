@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     // Step B: Update Need Total
     const { data: need, error: fetchError } = await supabase
       .from("needs")
-      .select("item_cost, funded_amount")
+      .select("item_cost, funded_amount, pledge_count")
       .eq("id", need_id)
       .single()
 

@@ -37,18 +37,18 @@ const stories = [
 
 export function ImpactTeaser() {
   return (
-    <section className="py-24 bg-surface overflow-hidden">
+    <section className="py-24 bg-slate-50 overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div className="max-w-2xl">
-            <h2 className="text-display-small font-black text-on-surface mb-4">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
               Real Work, Real Impact
             </h2>
-            <p className="text-body-large text-on-surface-variant">
+            <p className="text-lg text-slate-600">
               See the direct results of capital investment in skilled labor. These are not donations; they are investments in growth.
             </p>
           </div>
-          <Link href="/impact" className="text-label-large font-bold text-primary flex items-center group">
+          <Link href="/impact" className="text-base font-semibold text-primary flex items-center group cursor-pointer">
             Explore the Impact Wall
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Link>
@@ -63,28 +63,28 @@ export function ImpactTeaser() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full flex flex-col p-6 border-outline-variant/50 relative overflow-hidden group">
+              <Card className="h-full flex flex-col p-6 border-slate-200 relative overflow-hidden group cursor-pointer glass-card-hover">
                 <Quote className="absolute -top-4 -right-4 h-24 w-24 text-primary/5 -rotate-12 transition-transform group-hover:rotate-0" />
                 
                 <div className="flex items-center gap-4 mb-6 relative z-10">
                   <Avatar name={story.name} size="md" className="border-2 border-primary/10" />
                   <div className="flex flex-col">
-                    <h4 className="text-title-medium font-bold text-on-surface">{story.name}</h4>
+                    <h4 className="text-base font-bold text-slate-900">{story.name}</h4>
                     <div className="flex items-center gap-2">
-                      <span className="text-body-small text-on-surface-variant font-medium">{story.trade}</span>
-                      <span className="h-1 w-1 rounded-full bg-outline" />
-                      <span className="text-body-small text-on-surface-variant">{story.location}</span>
+                      <span className="text-sm text-slate-500 font-medium">{story.trade}</span>
+                      <span className="h-1 w-1 rounded-full bg-slate-300" />
+                      <span className="text-sm text-slate-500">{story.location}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-body-large text-on-surface flex-grow italic relative z-10">
-                  "{story.caption}"
+                <p className="text-base text-slate-700 flex-grow italic relative z-10">
+                  &ldquo;{story.caption}&rdquo;
                 </p>
 
-                <div className="mt-8 pt-6 border-t border-outline-variant relative z-10 flex justify-between items-center">
+                <div className="mt-8 pt-6 border-t border-slate-200 relative z-10 flex justify-between items-center">
                    <Badge level={4}>Funded</Badge>
-                   <span className="text-label-small text-on-surface-variant">March 2026</span>
+                   <span className="text-sm text-slate-400">March 2026</span>
                 </div>
               </Card>
             </motion.div>

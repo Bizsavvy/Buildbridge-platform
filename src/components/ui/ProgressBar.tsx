@@ -8,20 +8,19 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
 const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
   ({ className, percentage, ...props }, ref) => {
     
-    // Cap at 100 for visual bounds, though BuildBridge allows 110% overfunding
     const boundedPct = Math.min(Math.max(percentage, 0), 100);
     
-    let colorClass = "bg-badge-1"; // Blue
+    let colorClass = "bg-primary";
     if (percentage >= 100) {
-      colorClass = "bg-badge-4"; // Purple (fully funded)
+      colorClass = "bg-emerald-500";
     } else if (percentage >= 50) {
-      colorClass = "bg-badge-2"; // Green (halfway/progressing)
+      colorClass = "bg-primary";
     }
 
     return (
       <div
         ref={ref}
-        className={cn("h-2 w-full overflow-hidden rounded-full bg-surface-variant", className)}
+        className={cn("h-2 w-full overflow-hidden rounded-full bg-slate-100", className)}
         {...props}
       >
         <div

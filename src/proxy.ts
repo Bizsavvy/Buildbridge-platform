@@ -14,7 +14,7 @@ const PROTECTED_PATHS = ["/dashboard", "/admin"];
  *    cookies stay in sync with the server.
  * 2. Redirects unauthenticated users away from protected routes.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });

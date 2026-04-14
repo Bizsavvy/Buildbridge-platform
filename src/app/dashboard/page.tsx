@@ -19,9 +19,11 @@ import {
   Sparkles
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
 export default function DashboardPage() {
+  const router = useRouter()
   const supabase = createClient()
   
   const [profile, setProfile] = useState<any>(null)

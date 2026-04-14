@@ -1,13 +1,5 @@
 import type { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
 import './globals.css';
-
-const roboto = Roboto({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-});
 
 export const metadata: Metadata = {
   title: 'BuildBridge',
@@ -23,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body className="antialiased min-h-screen flex flex-col bg-background">
+    <html lang="en">
+      <body suppressHydrationWarning={true} className="antialiased min-h-screen flex flex-col bg-white font-sans">
         <Navbar />
         <main className="flex-grow pt-20">
           {children}

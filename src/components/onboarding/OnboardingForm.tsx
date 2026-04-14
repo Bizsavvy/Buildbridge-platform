@@ -16,6 +16,7 @@ import {
   Store, Zap, Droplets, Sparkles, Shirt,
   ChevronLeft, ChevronRight, Camera, CheckCircle
 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const STEPS = [
   "Trade",

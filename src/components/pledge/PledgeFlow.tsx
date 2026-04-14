@@ -131,7 +131,7 @@ export function PledgeFlow({ needId, needName, tradespersonName, goalAmount }: P
 
   if (!showFlow) {
     return (
-      <Button onClick={handleStartPledge} className="w-full text-headline-small py-8 rounded-2xl shadow-lg hover:scale-[1.02] transition-transform">
+      <Button onClick={handleStartPledge} className="w-full text-headline-small py-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-200">
         Back This Tradesperson
       </Button>
     )
