@@ -1,0 +1,33 @@
+export const NIGERIA_LOCATIONS: Record<string, string[]> = {
+  lagos: [
+    "Ikeja",
+    "Alimosho",
+    "Eti-Osa",
+    "Lagos Island",
+    "Kosofe",
+    "Mushin",
+    "Oshodi-Isolo",
+    "Surulere",
+  ],
+  oyo: ["Ibadan North", "Ibadan South-West", "Ogbomosho North", "Oyo East", "Iseyin"],
+  anambra: ["Awka South", "Onitsha North", "Onitsha South", "Nnewi North"],
+  rivers: ["Port Harcourt", "Obio-Akpor", "Eleme", "Bonny"],
+  kano: ["Kano Municipal", "Fagge", "Dala", "Gwale", "Tarauni"],
+  kaduna: ["Kaduna North", "Kaduna South", "Chikun", "Zaria"],
+  abuja_fct: ["Abuja Municipal", "Gwagwalada", "Kuje", "Bwari"],
+  ogun: ["Abeokuta South", "Abeokuta North", "Ijebu Ode", "Sagamu"],
+  enugu: ["Enugu North", "Enugu South", "Nsukka"],
+  delta: ["Warri South", "Asaba", "Uvwie"],
+  edo: ["Egor", "Ikpoba-Okha", "Oredo"],
+  imo: ["Owerri Municipal", "Owerri North", "Owerri West"],
+  kwara: ["Ilorin South", "Ilorin West", "Ilorin East"],
+  osun: ["Osogbo", "Ife Central", "Ife East"],
+  ondo: ["Akure South", "Akure North", "Ondo West"],
+  abia: ["Umuahia North", "Umuahia South", "Aba North", "Aba South"],
+  ekiti: ["Ado-Ekiti", "Ikere", "Oye"],
+  plateau: ["Jos North", "Jos South", "Bukuru"],
+  bayelsa: ["Yenagoa", "Southern Ijaw", "Sagbama"],
+  cross_river: ["Calabar Municipal", "Calabar South", "Akamkpa"],
+};
+
+export type NigerianState = keyof typeof NIGERIA_LOCATIONS;
