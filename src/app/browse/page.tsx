@@ -41,9 +41,18 @@ export default function BrowsePage() {
   const fetchNeeds = React.useCallback(async () => {
     setLoading(true)
     try {
+      // Base select
+      let selectStr = '*, profile:profiles(*)'
+      
+      // If we have filters that target the profile, we need an inner join to filter correctly
+      const hasProfileFilters = filters.category || filters.state || filters.badgeLevel !== null
+      if (hasProfileFilters) {
+         selectStr = '*, profile:profiles!inner(*)'
+      }
+
       let query = supabase
         .from('needs')
-        .select('*, profile:profiles(*)')
+        .select(selectStr)
         .eq('status', 'active')
 
       // Apply Filters
@@ -61,6 +70,8 @@ export default function BrowsePage() {
       }
 
       if (debouncedSearch) {
+        // Complex OR across joins is restricted in simple client-side queries
+        // Scaling search usually requires a dedicated RPC or view, but for MVP:
         query = query.or(`item_name.ilike.%${debouncedSearch}%,story.ilike.%${debouncedSearch}%`)
       }
 
@@ -83,7 +94,7 @@ export default function BrowsePage() {
       const { data, error } = await query.limit(50)
       
       if (error) throw error
-      setNeeds(data || [])
+      setNeeds((data as any) || [])
     } catch (err) {
       console.error("Fetch error:", err)
     } finally {

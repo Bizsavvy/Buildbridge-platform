@@ -14,29 +14,34 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
   level: BadgeLevelType;
 }
 
-const levelConfig = {
+const levelConfig: Record<number, { bg: string; color: string; icon: React.ElementType; label: string }> = {
   0: {
-    bg: "bg-slate-100 border border-slate-200 text-slate-500",
+    bg: 'var(--color-surface-variant)',
+    color: 'var(--color-on-surface-variant)',
     icon: Shield,
     label: "Unverified",
   },
   1: {
-    bg: "bg-primary/10 border border-primary/30 text-primary",
+    bg: 'var(--color-primary-container)',
+    color: 'var(--color-on-primary-container)',
     icon: User,
     label: "Community",
   },
   2: {
-    bg: "bg-emerald-500/10 border border-emerald-500/30 text-emerald-600",
+    bg: '#dcfce7',
+    color: '#166534',
     icon: ShieldCheck,
     label: "Trusted",
   },
   3: {
-    bg: "bg-amber-500/10 border border-amber-500/30 text-amber-600",
+    bg: '#fef3c7',
+    color: '#92400e',
     icon: Star,
     label: "Established",
   },
   4: {
-    bg: "bg-purple-500/10 border border-purple-500/30 text-purple-600",
+    bg: 'var(--color-primary-container)',
+    color: 'var(--color-on-primary-container)',
     icon: BadgeCheck,
     label: "Verified",
   }
@@ -45,20 +50,21 @@ const levelConfig = {
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, level, children, ...props }, ref) => {
     
-    const { bg, icon: Icon, label } = levelConfig[level] || levelConfig[0];
+    const config = levelConfig[level] || levelConfig[0];
+    const Icon = config.icon;
     
     return (
       <div
         ref={ref}
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-semibold text-sm shadow-sm transition-colors duration-200 hover:opacity-80 cursor-pointer",
-          bg,
           className
         )}
+        style={{ background: config.bg, color: config.color }}
         {...props}
       >
         <Icon className="h-4 w-4" />
-        {children || label}
+        {children || config.label}
       </div>
     )
   }

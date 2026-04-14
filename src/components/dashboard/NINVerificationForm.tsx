@@ -36,16 +36,28 @@ export function NINVerificationForm({ onSuccess, onClose }: NINVerificationFormP
 
     setLoading(true)
     setError(null)
+    setStep(1) // Show verifying UI
 
-    // TODO: Connect to Dojah API (e.g., /api/verify/nin)
-    // For now, mock the verification with a delay
-    setTimeout(() => {
-      setStep(1)
-      setTimeout(() => {
-         setStep(2)
-         setLoading(false)
-      }, 2000)
-    }, 1500)
+    try {
+      const res = await fetch('/api/identity/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'nin', documentId: nin })
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Verification failed")
+      }
+
+      setStep(2) // Show success
+    } catch (err: any) {
+      console.error(err)
+      setError(err.message)
+      setStep(0) // Return to input if error
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

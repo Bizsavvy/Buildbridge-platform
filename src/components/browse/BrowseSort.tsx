@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ArrowDownAZ, ChevronDown } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 export type SortOption = 'urgent' | 'newest' | 'nearly_funded' | 'most_pledged'
@@ -37,25 +38,37 @@ export function BrowseSort({ onSortChange, activeSort }: BrowseSortProps) {
         </button>
       </div>
 
-      {isOpen && (
-        <div className="absolute top-[calc(100%+8px)] right-0 min-w-[200px] z-30 bg-surface border border-outline-variant shadow-lg rounded-xl p-2 animate-in fade-in zoom-in-95">
-          {SORT_OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              onClick={() => {
-                onSortChange(opt.id)
-                setIsOpen(false)
-              }}
-              className={cn(
-                "w-full text-left p-3 rounded-lg hover:bg-primary/5 text-body-medium transition-colors",
-                activeSort === opt.id && "bg-primary/10 text-primary font-bold"
-              )}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <div className="fixed inset-0 z-20" onClick={() => setIsOpen(false)} />
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="absolute top-[calc(100%+8px)] right-0 min-w-[200px] z-30 bg-surface border border-outline-variant shadow-xl rounded-2xl p-2"
             >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-      )}
+              {SORT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => {
+                    onSortChange(opt.id)
+                    setIsOpen(false)
+                  }}
+                  className={cn(
+                    "w-full text-left p-4 rounded-xl hover:bg-primary/5 text-body-medium transition-colors flex items-center justify-between",
+                    activeSort === opt.id && "bg-primary/10 text-primary font-black"
+                  )}
+                >
+                  {opt.label}
+                  {activeSort === opt.id && <div className="h-2 w-2 rounded-full bg-primary" />}
+                </button>
+              ))}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

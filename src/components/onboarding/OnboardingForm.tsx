@@ -14,8 +14,9 @@ import { NIGERIA_LOCATIONS } from "@/lib/data/nigeria"
 import { 
   Scissors, Hammer, ChefHat, Flame, Watch, 
   Store, Zap, Droplets, Sparkles, Shirt,
-  ChevronLeft, ChevronRight, Camera, CheckCircle
+  ChevronLeft, ChevronRight, Camera, CheckCircle, Mic, MicOff, Loader2
 } from "lucide-react"
+import { useVoiceInput } from "@/hooks/useVoiceInput"
 import { cn } from "@/lib/utils"
 
 const STEPS = [
@@ -46,6 +47,8 @@ export function OnboardingForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  const voiceInput = useVoiceInput()
 
   const [formData, setFormData] = useState({
     trade_category: "",
@@ -299,22 +302,62 @@ export function OnboardingForm() {
                 <Textarea 
                   label="Your Story"
                   placeholder="Tell us about yourself and your work..."
-                  value={formData.story}
-                  onChange={(e) => setFormData({ ...formData, story: e.target.value })}
+                  value={voiceInput.isListening ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story}
+                  onChange={(e) => {
+                     if (!voiceInput.isListening) {
+                        setFormData({ ...formData, story: e.target.value })
+                     }
+                  }}
                   className="min-h-[200px]"
                   error={formData.story.split(/\s+/).filter(Boolean).length > 300 ? "Please keep your story under 300 words." : undefined}
                 />
                 
                 <div className="flex justify-between items-center text-label-small">
+                  <div className="flex-1">
+                    {voiceInput.isSupported && (
+                      <button 
+                        onClick={() => {
+                          if (voiceInput.isListening) {
+                            voiceInput.stopListening();
+                            setFormData(prev => ({ ...prev, story: `${prev.story} ${voiceInput.transcript}`.trim() }));
+                          } else {
+                            voiceInput.startListening();
+                          }
+                        }}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all",
+                          voiceInput.isListening 
+                            ? "bg-error text-white animate-pulse shadow-md" 
+                            : "bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-primary"
+                        )}
+                      >
+                        {voiceInput.isListening ? (
+                          <>
+                             <MicOff className="h-4 w-4" /> Stop Dictation
+                          </>
+                        ) : (
+                          <>
+                             <Mic className="h-4 w-4" /> Tap to Speak
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  
                   <span className={cn(
+                    "font-medium",
                     formData.story.split(/\s+/).filter(Boolean).length > 300 ? "text-error" : "text-on-surface-variant"
                   )}>
-                    {formData.story.split(/\s+/).filter(Boolean).length} / 300 words
+                    {(voiceInput.isListening ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story).split(/\s+/).filter(Boolean).length} / 300 words
                   </span>
                 </div>
               </div>
 
-              <Button onClick={nextStep} disabled={!formData.story || formData.story.split(/\s+/).filter(Boolean).length > 300} className="w-full mt-2">
+              <Button 
+                 onClick={nextStep} 
+                 disabled={(!formData.story && !voiceInput.transcript) || (voiceInput.isListening ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story).split(/\s+/).filter(Boolean).length > 300} 
+                 className="w-full mt-4"
+               >
                  Continue
                </Button>
             </motion.div>

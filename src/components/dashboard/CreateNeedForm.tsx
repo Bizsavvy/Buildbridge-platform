@@ -18,8 +18,12 @@ import {
   ArrowRight, 
   Calendar,
   CheckCircle2,
-  Info
+  Info,
+  Mic,
+  MicOff,
+  Loader2
 } from "lucide-react"
+import { useVoiceInput } from "@/hooks/useVoiceInput"
 import { cn } from "@/lib/utils"
 
 interface CreateNeedFormProps {
@@ -47,6 +51,7 @@ export function CreateNeedForm({ tradeCategory }: CreateNeedFormProps) {
   })
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const voiceInput = useVoiceInput()
 
   const steps = [
     "Item",
@@ -312,16 +317,44 @@ export function CreateNeedForm({ tradeCategory }: CreateNeedFormProps) {
                     </div>
                     <Textarea 
                         className="min-h-[180px]"
-                        value={formData.story}
-                        onChange={(e) => setFormData({ ...formData, story: e.target.value })}
+                        value={voiceInput.isListening && currentStep === 3 ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story}
+                        onChange={(e) => {
+                           if (!voiceInput.isListening) {
+                              setFormData({ ...formData, story: e.target.value })
+                           }
+                        }}
                         placeholder="I've been a welder for 5 years. This machine will help me..."
                     />
-                    <div className="text-label-small text-on-surface-variant text-right">
-                        {formData.story.split(/\s+/).filter(Boolean).length} / 150 words
+                    <div className="flex justify-between items-center text-label-small">
+                        <div className="flex-1">
+                          {voiceInput.isSupported && (
+                            <button 
+                              onClick={() => {
+                                if (voiceInput.isListening) {
+                                  voiceInput.stopListening();
+                                  setFormData(prev => ({ ...prev, story: `${prev.story} ${voiceInput.transcript}`.trim() }));
+                                } else {
+                                  voiceInput.startListening();
+                                }
+                              }}
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-1.5 rounded-full font-bold transition-all",
+                                voiceInput.isListening 
+                                  ? "bg-error text-white animate-pulse shadow-md" 
+                                  : "bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-primary"
+                              )}
+                            >
+                              {voiceInput.isListening ? <><MicOff className="h-4 w-4" /> Stop Dictation</> : <><Mic className="h-4 w-4" /> Tap to Speak</>}
+                            </button>
+                          )}
+                        </div>
+                        <span className={cn("font-medium", formData.story.split(/\s+/).filter(Boolean).length > 150 ? "text-error" : "text-on-surface-variant")}>
+                           {(voiceInput.isListening && currentStep === 3 ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story).split(/\s+/).filter(Boolean).length} / 150 words
+                        </span>
                     </div>
                 </div>
 
-                <Button onClick={nextStep} disabled={!formData.story || formData.story.split(/\s+/).filter(Boolean).length > 150} className="w-full mt-2">
+                <Button onClick={nextStep} disabled={(!formData.story && !(voiceInput.isListening && currentStep === 3)) || (voiceInput.isListening && currentStep === 3 ? `${formData.story} ${voiceInput.transcript}`.trim() : formData.story).split(/\s+/).filter(Boolean).length > 150} className="w-full mt-2">
                     Continue
                 </Button>
             </motion.div>
@@ -342,13 +375,40 @@ export function CreateNeedForm({ tradeCategory }: CreateNeedFormProps) {
                     <Textarea 
                         label="Direct Impact"
                         placeholder="e.g. This will allow me to train two new apprentices this year."
-                        value={formData.impact_statement}
-                        onChange={(e) => setFormData({ ...formData, impact_statement: e.target.value })}
+                        value={voiceInput.isListening && currentStep === 4 ? `${formData.impact_statement} ${voiceInput.transcript}`.trim() : formData.impact_statement}
+                        onChange={(e) => {
+                           if (!voiceInput.isListening) {
+                              setFormData({ ...formData, impact_statement: e.target.value })
+                           }
+                        }}
                     />
+                    
+                    {voiceInput.isSupported && (
+                      <div className="mt-2 text-right">
+                         <button 
+                            onClick={() => {
+                              if (voiceInput.isListening) {
+                                voiceInput.stopListening();
+                                setFormData(prev => ({ ...prev, impact_statement: `${prev.impact_statement} ${voiceInput.transcript}`.trim() }));
+                              } else {
+                                voiceInput.startListening();
+                              }
+                            }}
+                            className={cn(
+                              "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-label-small font-bold transition-all",
+                              voiceInput.isListening 
+                                ? "bg-error text-white animate-pulse shadow-md" 
+                                : "bg-surface border border-outline-variant text-on-surface hover:bg-surface-variant hover:text-primary"
+                            )}
+                          >
+                            {voiceInput.isListening ? <><MicOff className="h-4 w-4" /> Stop Dictation</> : <><Mic className="h-4 w-4" /> Tap to Speak</>}
+                          </button>
+                      </div>
+                    )}
                     {/* TODO: Integrate DeepSeek AI for impact generation/polishing here */}
                 </Card>
 
-                <Button onClick={nextStep} disabled={!formData.impact_statement} className="w-full">
+                <Button onClick={nextStep} disabled={!formData.impact_statement && !(voiceInput.isListening && currentStep === 4)} className="w-full mt-4">
                     Continue
                 </Button>
             </motion.div>

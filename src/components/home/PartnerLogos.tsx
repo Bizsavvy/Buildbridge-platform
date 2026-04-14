@@ -5,19 +5,19 @@ import { motion } from "framer-motion"
 
 const partners = [
   "Paystack",
-  "Supabase",
-  "Andela",
+  "Supabase", 
   "Flutterwave",
-  "Termii",
-  "Interswitch"
+  "Interswitch",
+  "Andela",
+  "Termii"
 ]
 
 export function PartnerLogos() {
   return (
-    <section className="py-12 border-y border-slate-200 bg-slate-50/50">
+    <section className="py-12 border-y" style={{ background: 'var(--color-surface-container-low)', borderColor: 'var(--color-outline-variant)' }}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-sm font-semibold text-slate-500 uppercase tracking-[0.2em] mb-10">
-          Trusted Partners & Infrastructure
+        <p className="text-center text-sm font-semibold uppercase tracking-[0.2em] mb-10" style={{ color: 'var(--color-on-surface-variant)' }}>
+          Trusted Infrastructure
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 md:justify-between">
           {partners.map((partner, index) => (
@@ -27,9 +27,9 @@ export function PartnerLogos() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex items-center justify-center grayscale opacity-50 transition-all duration-300 hover:grayscale-0 hover:opacity-100 cursor-pointer"
+              className="flex items-center justify-center transition-all duration-300 cursor-pointer"
             >
-              <span className="text-2xl font-bold text-slate-400 tracking-tighter">
+              <span className="text-2xl font-bold tracking-tighter" style={{ color: 'var(--color-on-surface)', opacity: 0.4 }}>
                 {partner}.
               </span>
             </motion.div>

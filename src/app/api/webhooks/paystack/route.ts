@@ -102,7 +102,27 @@ export async function POST(req: NextRequest) {
 
     if (updateError) throw updateError
 
-    // TODO: Trigger SMS/WhatsApp notification to tradesperson here
+    // 4. Notifications & Milestones
+    try {
+      // We need the profile owner's user_id
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('id', need_id === metadata.need_id ? need_id : metadata.need_id) // Safety check on IDs
+        .single()
+
+      if (profile?.user_id) {
+        // Trigger Pledge Notification
+        const { notifyPledgeReceived } = await import("@/lib/notifications")
+        const { checkAndTriggerMilestones } = await import("@/lib/milestones")
+
+        await notifyPledgeReceived(profile.user_id, totalPledgeKobo, need_id, reference)
+        await checkAndTriggerMilestones(need_id)
+      }
+    } catch (notifErr) {
+      // We don't want to fail the webhook if notifications fail, we log them for audit anyway
+      console.error("Non-critical notification error:", notifErr)
+    }
 
     return NextResponse.json({ received: true }, { status: 200 })
 

@@ -18,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label 
             htmlFor={inputId} 
-            className="text-base font-medium text-slate-700"
+            className="text-base font-medium text-on-surface"
           >
             {label}
           </label>
@@ -27,19 +27,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           type={type}
           className={cn(
-            "flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-base text-slate-900 transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-14 w-full rounded-xl border bg-white px-4 py-2 text-base text-on-surface transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-on-surface-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50",
             error 
-              ? "border-red-500 focus-visible:ring-red-500" 
-              : "border-slate-200 focus-visible:border-primary",
+              ? "border-error focus-visible:ring-error" 
+              : "border-outline focus-visible:border-primary",
             className
           )}
           ref={ref}
           {...props}
         />
         {error ? (
-          <p className="text-sm text-red-500">{error}</p>
+          <p className="text-sm text-error">{error}</p>
         ) : helperText ? (
-          <p className="text-sm text-slate-500">{helperText}</p>
+          <p className="text-sm text-on-surface-variant">{helperText}</p>
         ) : null}
       </div>
     )

@@ -65,7 +65,20 @@ export function BrowseFilters({ onFilterChange, activeFilters }: BrowseFiltersPr
               <Filter className="h-4 w-4 text-primary" />
               <span>{activeFilters.state || "Everywhere"}</span>
             </div>
-            <ChevronDown className={cn("h-4 w-4 transition-transform", isStatesOpen && "rotate-180")} />
+            <div className="flex items-center gap-2">
+               {activeFilters.state && (
+                  <button 
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        handleStateSelect("");
+                     }}
+                     className="p-1 hover:bg-on-surface/10 rounded-full transition-colors"
+                  >
+                     <X className="h-4 w-4 text-error" />
+                  </button>
+               )}
+               <ChevronDown className={cn("h-4 w-4 transition-transform", isStatesOpen && "rotate-180")} />
+            </div>
           </button>
           
           {isStatesOpen && (

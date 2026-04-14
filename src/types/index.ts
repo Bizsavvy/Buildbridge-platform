@@ -6,6 +6,7 @@ export type {
   Vouch,
   Verification,
   ImpactWallSubmission,
+  NotificationType,
 } from './database';
 
 export {

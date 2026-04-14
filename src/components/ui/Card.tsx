@@ -11,10 +11,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          "rounded-2xl border border-slate-200 bg-white shadow-sm",
-          hoverLift && "transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-pointer",
+          "rounded-2xl border shadow-sm",
+          hoverLift && "transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer",
           className
         )}
+        style={{ 
+          background: 'var(--color-surface-container)', 
+          borderColor: 'var(--color-outline-variant)' 
+        }}
         {...props}
       />
     )

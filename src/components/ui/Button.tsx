@@ -21,16 +21,30 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      primary: "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5",
-      secondary: "bg-white text-primary hover:bg-primary/5 border-2 border-primary/10 hover:border-primary/20",
-      ghost: "bg-transparent text-primary hover:bg-primary/5",
+      primary: "shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5",
+      secondary: "border-2 hover:opacity-80",
+      ghost: "bg-transparent hover:opacity-80",
+    };
+
+    const getVariantStyles = () => {
+      switch (variant) {
+        case "primary":
+          return { background: 'var(--color-primary)', color: 'var(--color-on-primary)' };
+        case "secondary":
+          return { background: 'var(--color-surface)', color: 'var(--color-primary)', borderColor: 'var(--color-outline-variant)' };
+        case "ghost":
+          return { background: 'transparent', color: 'var(--color-primary)' };
+        default:
+          return { background: 'var(--color-primary)', color: 'var(--color-on-primary)' };
+      }
     };
 
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={cn(baseStyles, sizeStyles[size], variantStyles[variant], className)}
+        className={cn(baseStyles, sizeStyles[size], className)}
+        style={getVariantStyles()}
         {...props}
       >
         {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}

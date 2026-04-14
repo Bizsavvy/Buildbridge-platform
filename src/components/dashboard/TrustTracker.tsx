@@ -10,9 +10,10 @@ interface TrustTrackerProps {
   vouches: number;
   deliveries: number;
   onVerifyClick: () => void;
+  onVouchRequest: () => void;
 }
 
-export function TrustTracker({ currentLevel, vouches, deliveries, onVerifyClick }: TrustTrackerProps) {
+export function TrustTracker({ currentLevel, vouches, deliveries, onVerifyClick, onVouchRequest }: TrustTrackerProps) {
   
   const getNextMilestone = () => {
     switch (currentLevel) {
@@ -102,7 +103,7 @@ export function TrustTracker({ currentLevel, vouches, deliveries, onVerifyClick 
                    {next.cta}
                 </Button>
               ) : (
-                <Button variant="ghost" className="rounded-xl px-4 gap-2 border border-outline-variant hover:bg-surface">
+                 <Button variant="ghost" onClick={onVouchRequest} className="rounded-xl px-4 gap-2 border border-outline-variant hover:bg-surface">
                    {next?.cta}
                    <ArrowRight className="h-4 w-4" />
                 </Button>

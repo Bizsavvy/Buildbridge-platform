@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { TrustTracker } from "@/components/dashboard/TrustTracker"
 import { NINVerificationForm } from "@/components/dashboard/NINVerificationForm"
+import { SubmitImpactModal } from "@/components/dashboard/SubmitImpactModal"
 import { Button } from "@/components/ui/Button"
 import { NeedCard, NeedCardSkeleton } from "@/components/ui/NeedCard"
 import { EmptyState } from "@/components/ui/EmptyState"
@@ -16,7 +17,8 @@ import {
   Users, 
   ShieldCheck,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  CheckCircle2
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -30,6 +32,9 @@ export default function DashboardPage() {
   const [needs, setNeeds] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [isVerifying, setIsVerifying] = useState(false)
+  const [isSubmittingImpact, setIsSubmittingImpact] = useState(false)
+  const [selectedNeedForImpact, setSelectedNeedForImpact] = useState<any>(null)
+  const [showCopied, setShowCopied] = useState(false)
 
   const fetchDashboardData = async () => {
     setLoading(true)
@@ -64,16 +69,22 @@ export default function DashboardPage() {
   }, [])
 
   const handleVerificationSuccess = async () => {
-    // Optimistic update
-    setProfile({ ...profile, badge_level: 'level_4_platform_verified' })
-    
-    // Background database update
-    await supabase
-      .from('profiles')
-      .update({ badge_level: 'level_4_platform_verified' })
-      .eq('id', profile.id)
-    
+    // Backend has securely updated the profile tier based on verification bounds.
+    await fetchDashboardData()
     setIsVerifying(false)
+  }
+
+  const handleImpactSuccess = async () => {
+    await fetchDashboardData()
+    setIsSubmittingImpact(false)
+  }
+
+  const handleVouchRequest = () => {
+    if (!profile?.id) return
+    const vouchUrl = `${window.location.origin}/profile/${profile.id}/vouch`
+    navigator.clipboard.writeText(vouchUrl)
+    setShowCopied(true)
+    setTimeout(() => setShowCopied(false), 3000)
   }
 
   if (loading) {
@@ -125,13 +136,27 @@ export default function DashboardPage() {
            </div>
         </div>
 
-        {/* Verification Tracker */}
         <TrustTracker 
           currentLevel={badgeEnumMapping[profile?.badge_level || 'level_0_unverified']}
           vouches={profile?.vouch_count || 0}
           deliveries={profile?.delivered_count || 0}
           onVerifyClick={() => setIsVerifying(true)}
+          onVouchRequest={handleVouchRequest}
         />
+
+        <AnimatePresence>
+          {showCopied && (
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-on-surface text-surface py-3 px-6 rounded-2xl shadow-2xl font-bold flex items-center gap-2"
+            >
+              <CheckCircle2 className="h-5 w-5 text-primary" />
+              Vouch link copied to clipboard!
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Two-Column Insights */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -146,10 +171,39 @@ export default function DashboardPage() {
               </div>
 
               {needs.length > 0 ? (
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {needs.map(need => (
-                       <NeedCard key={need.id} need={{...need, profile}} />
-                    ))}
+                 <div className="flex flex-col gap-6">
+                    {/* Highlight Needs ready for Impact Wall */}
+                    {needs.some(n => n.status === 'completed') && (
+                        <div className="p-6 bg-primary/5 border border-primary/20 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-4 text-center md:text-left">
+                                <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center shrink-0">
+                                    <Sparkles className="h-6 w-6" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <h4 className="text-title-medium font-black text-on-surface">Share your success stories!</h4>
+                                    <p className="text-body-small text-on-surface-variant">You have funded needs ready for the Impact Wall.</p>
+                                </div>
+                            </div>
+                            <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => {
+                                    const readyNeed = needs.find(n => n.status === 'completed');
+                                    setSelectedNeedForImpact(readyNeed);
+                                    setIsSubmittingImpact(true);
+                                }}
+                                className="rounded-xl px-6 min-w-[200px]"
+                            >
+                                Share Your {needs.find(n => n.status === 'completed')?.item_name} Story
+                            </Button>
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {needs.map(need => (
+                           <NeedCard key={need.id} need={{...need, profile}} />
+                        ))}
+                    </div>
                  </div>
               ) : (
                 <EmptyState 
@@ -235,6 +289,34 @@ export default function DashboardPage() {
                <NINVerificationForm 
                   onSuccess={handleVerificationSuccess} 
                   onClose={() => setIsVerifying(false)} 
+               />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Impact Submission Overlay */}
+      <AnimatePresence>
+        {isSubmittingImpact && selectedNeedForImpact && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className="absolute inset-0 bg-on-surface/80 backdrop-blur-md"
+               onClick={() => setIsSubmittingImpact(false)}
+            />
+            <motion.div 
+               initial={{ opacity: 0, scale: 0.95, y: 20 }}
+               animate={{ opacity: 1, scale: 1, y: 0 }}
+               exit={{ opacity: 0, scale: 0.95, y: 20 }}
+               className="relative w-full max-w-lg bg-surface rounded-[2.5rem] p-10 shadow-2xl overflow-hidden"
+            >
+               <SubmitImpactModal 
+                  needId={selectedNeedForImpact.id}
+                  itemName={selectedNeedForImpact.item_name}
+                  onSuccess={handleImpactSuccess} 
+                  onClose={() => setIsSubmittingImpact(false)} 
                />
             </motion.div>
           </div>
