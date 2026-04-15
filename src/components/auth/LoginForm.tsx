@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
+import Link from "next/link"
 import { Phone, ArrowRight, ShieldCheck } from "lucide-react"
 
 export default function LoginForm() {
@@ -184,6 +185,13 @@ export default function LoginForm() {
             <span>Continue</span>
             {!isLoading && <ArrowRight className="ml-2 w-5 h-5" />}
           </Button>
+
+          <div className="text-center text-body-small text-on-surface-variant">
+            New to BuildBridge?{" "}
+            <Link href="/register" className="text-primary font-semibold hover:underline">
+              Create an account
+            </Link>
+          </div>
         </form>
       ) : (
         <form onSubmit={handleVerifyOtp} className="flex flex-col gap-6">

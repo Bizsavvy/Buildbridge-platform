@@ -54,7 +54,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         <Link href="/login" className="w-full" onClick={onClose}>
           <Button variant="ghost" className="w-full justify-center text-on-surface">Log In</Button>
         </Link>
-        <Link href="/login" className="w-full" onClick={onClose}>
+        <Link href="/register" className="w-full" onClick={onClose}>
           <Button variant="primary" className="w-full justify-center">Get Started</Button>
         </Link>
       </div>

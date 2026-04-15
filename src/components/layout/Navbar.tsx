@@ -79,7 +79,7 @@ export function Navbar() {
               </span>
             </Link>
             
-            <Link href="/onboarding" className="cursor-pointer">
+            <Link href="/register" className="cursor-pointer">
               <button 
                 className={`h-11 px-7 rounded-full font-extrabold text-sm transition-all flex items-center justify-center hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/10 ${
                   isScrolled ? 'bg-primary text-white' : 'bg-white text-primary'

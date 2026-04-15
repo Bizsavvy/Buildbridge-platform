@@ -3,7 +3,7 @@ import { type NotificationType, NotificationChannel } from "@/types"
 
 const TERMII_API_KEY = process.env.TERMII_API_KEY
 const TERMII_SENDER_ID = process.env.TERMII_SENDER_ID || "BuildBridge"
-const TERMII_BASE_URL = "https://api.ng.termii.com/api"
+const TERMII_BASE_URL = "https://v3.api.termii.com/api"
 
 interface SendMessageResult {
   success: boolean
@@ -47,9 +47,14 @@ export async function sendNotification({
   }
 
   // 2. Prepare Payload
+  let normalizedPhone = user.phone.replace(/^\+/, "")
+  if (normalizedPhone.startsWith("234") && normalizedPhone.length === 13) {
+    normalizedPhone = "0" + normalizedPhone.slice(3)
+  }
+
   const payload = {
     api_key: TERMII_API_KEY,
-    to: user.phone,
+    to: normalizedPhone,
     from: TERMII_SENDER_ID,
     sms: message,
     type: "plain",

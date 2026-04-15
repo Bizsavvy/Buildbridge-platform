@@ -26,6 +26,9 @@
   
   --color-error: var(--color-material-theme-sys-light-error);
   --color-on-error: var(--color-material-theme-sys-light-on-error);
+  
+  --color-success: var(--primitive-colors-2-key-colors-success);
+  --color-on-success: var(--color-material-theme-sys-light-on-primary);
 
   --shadow-premium: 0 20px 50px rgba(0,0,0,0.05);
   --shadow-glass: 0 8px 32px 0 rgba(31,38,135,0.07);

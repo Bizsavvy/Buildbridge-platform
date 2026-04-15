@@ -23,7 +23,7 @@ export function FinalCTA() {
             Join thousands of backers supporting Nigerian tradespeople. Whether you&apos;re at home or in the diaspora, your capital makes growth possible.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/login">
+            <Link href="/register">
               <Button 
                 className="min-w-[200px] shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
                 style={{ background: 'white', color: 'var(--color-primary)' }}

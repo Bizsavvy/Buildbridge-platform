@@ -45,6 +45,22 @@ export function Hero({ stats }: HeroProps) {
               className="absolute w-12 h-12 rounded-full border-2 border-white shadow-xl overflow-hidden bg-surface-variant flex items-center justify-center"
               style={{ top: pos.top, left: pos.left, right: pos.right, bottom: pos.bottom }}
             >
+              <Link href="/browse" className="cursor-pointer">
+                <button 
+                  className="w-full sm:w-auto h-14 px-8 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                  style={{ background: 'var(--color-primary)', color: 'var(--color-on-primary)' }}
+                >
+                  Browse Needs
+                </button>
+              </Link>
+              <Link href="/register" className="cursor-pointer">
+                <button 
+                  className="w-full sm:w-auto h-14 px-8 rounded-full font-bold text-lg transition-all border-2 flex items-center justify-center gap-2 hover:bg-surface-variant/50"
+                  style={{ borderColor: 'var(--color-outline-variant)', color: 'var(--color-on-surface)' }}
+                >
+                  Join as Artisan
+                </button>
+              </Link>
               <img 
                 src={pos.url} 
                 alt="Community member" 
