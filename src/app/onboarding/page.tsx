@@ -11,21 +11,20 @@ export const metadata: Metadata = {
 export default async function OnboardingPage() {
   const supabase = await createClient()
 
-  // 1. Verify Authentication
-  const { data: { user }, error } = await supabase.auth.getUser()
-  if (error || !user) {
-    redirect("/login")
-  }
-
+  // 1. Verify Authentication (Moved to trigger later in the flow for reduced friction)
+  const { data: { user } } = await supabase.auth.getUser()
+  
   // 2. Check if user already has a profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("user_id", user.id)
-    .single()
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("user_id", user.id)
+      .single()
 
-  if (profile) {
-    redirect("/dashboard")
+    if (profile) {
+      redirect("/dashboard")
+    }
   }
 
   return (
