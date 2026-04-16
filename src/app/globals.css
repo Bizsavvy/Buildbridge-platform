@@ -5,34 +5,34 @@
   --color-on-primary: var(--color-material-theme-sys-light-on-primary);
   --color-primary_container: var(--color-material-theme-sys-light-primary_container);
   --color-on-primary-container: var(--color-material-theme-sys-light-on-primary-container);
-  
+
   --color-secondary: var(--color-material-theme-sys-light-secondary);
   --color-on-secondary: var(--color-material-theme-sys-light-on-secondary);
   --color-secondary_container: var(--color-material-theme-sys-light-secondary_container);
   --color-on-secondary-container: var(--color-material-theme-sys-light-on-secondary-container);
-  
+
   --color-tertiary: var(--color-material-theme-sys-light-tertiary);
   --color-on-tertiary: var(--color-material-theme-sys-light-on-tertiary);
   --color-tertiary_container: var(--color-material-theme-sys-light-tertiary_container);
   --color-on-tertiary-container: var(--color-material-theme-sys-light-on-tertiary-container);
-  
+
   --color-surface: var(--color-material-theme-sys-light-surface);
   --color-on-surface: var(--color-material-theme-sys-light-on-surface);
   --color-surface-variant: var(--color-material-theme-sys-light-surface-variant);
   --color-on-surface-variant: var(--color-material-theme-sys-light-on-surface-variant);
-  
+
   --color-outline: var(--color-material-theme-sys-light-outline);
   --color-outline-variant: var(--color-material-theme-sys-light-outline-variant);
-  
+
   --color-error: var(--color-material-theme-sys-light-error);
   --color-on-error: var(--color-material-theme-sys-light-on-error);
-  
+
   --color-success: var(--primitive-colors-2-key-colors-success);
   --color-on-success: var(--color-material-theme-sys-light-on-primary);
 
-  --shadow-premium: 0 20px 50px rgba(0,0,0,0.05);
-  --shadow-glass: 0 8px 32px 0 rgba(31,38,135,0.07);
-  --shadow-glass-lg: 0 25px 50px -12px rgba(0,0,0,0.25);
+  --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.05);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-glass-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 @layer utilities {
@@ -42,14 +42,14 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
-  
+
   .glass-dark {
     background: rgba(15, 15, 23, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .glass-card {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(16px);
@@ -57,7 +57,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
   }
-  
+
   .glass-card-hover {
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(20px);
@@ -66,29 +66,29 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
     transition: all 0.3s ease;
   }
-  
+
   .glass-card-hover:hover {
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
   }
-  
+
   .text-gradient {
     background: linear-gradient(135deg, var(--color-material-theme-sys-light-primary) 0%, #8B5CF6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .mesh-bg {
-    background: 
+    background:
       radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 70%, rgba(101, 85, 143, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.9) 0%, var(--color-material-theme-sys-light-background) 100%);
   }
-  
+
   .mesh-bg-dark {
-    background: 
+    background:
       radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
       radial-gradient(ellipse at 80% 70%, rgba(101, 85, 143, 0.1) 0%, transparent 50%),
       linear-gradient(180deg, var(--color-material-theme-sys-light-background) 0%, #f5f3fa 100%);
@@ -702,20 +702,21 @@
 
 body {
   font-family: var(--typography-material-theme-body-medium-fontFamily, 'Roboto', sans-serif);
-  background-color: #ffffff; /* Cleaner white for GoFundMe feel */
+  background-color: #ffffff;
+  /* Cleaner white for GoFundMe feel */
   color: var(--color-material-theme-sys-light-on-background, #1d1b20);
 }
 
 @layer utilities {
   .mesh-bg {
     background-color: #ffffff;
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(101, 85, 143, 0.1) 0, transparent 50%), 
-      radial-gradient(at 50% 0%, rgba(202, 196, 208, 0.05) 0, transparent 50%), 
+    background-image:
+      radial-gradient(at 0% 0%, rgba(101, 85, 143, 0.1) 0, transparent 50%),
+      radial-gradient(at 50% 0%, rgba(202, 196, 208, 0.05) 0, transparent 50%),
       radial-gradient(at 100% 0%, rgba(103, 80, 164, 0.1) 0, transparent 50%);
   }
 
-.glass-card {
+  .glass-card {
     @apply bg-white/80 backdrop-blur-md border border-[var(--color-outline-variant)] shadow-glass;
   }
 

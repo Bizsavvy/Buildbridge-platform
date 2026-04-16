@@ -4,6 +4,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'BuildBridge',
   description: 'Back the skilled workers building their communities.',
+  icons: {
+    icon: '/buildbridge-favicon.png',
+  },
 };
 
 import { Navbar } from "@/components/layout/Navbar";
