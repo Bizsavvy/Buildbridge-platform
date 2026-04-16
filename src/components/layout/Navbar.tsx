@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, Hammer, LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { MobileNav } from "./MobileNav"
