@@ -24,7 +24,7 @@ export function Hero({ stats }: HeroProps) {
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         {/* Decorative Floating Blobs */}
-        <div className="absolute inset-0 pointer-events-none hidden lg:block">
+        <div className="absolute inset-0 pointer-events-none">
           {[
              { top: '15%', left: '8%', delay: 0, bg: 'bg-primary/20' },
              { top: '25%', left: '20%', delay: 0.2, bg: 'bg-tertiary/15' },
@@ -34,9 +34,13 @@ export function Hero({ stats }: HeroProps) {
             <motion.div
               key={i}
               initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 0.6 }}
-              transition={{ duration: 0.8, delay: pos.delay }}
-              className={`absolute w-10 h-10 rounded-full ${pos.bg} blur-sm`}
+              animate={{ scale: 1, opacity: 0.8, y: [0, -15, 0] }}
+              transition={{
+                scale: { duration: 0.8, delay: pos.delay },
+                opacity: { duration: 0.8, delay: pos.delay },
+                y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+              }}
+              className={`absolute w-16 h-16 rounded-full ${pos.bg} blur-sm border-2 border-white/20`}
               style={{ top: pos.top, left: pos.left, right: pos.right }}
             />
           ))}
