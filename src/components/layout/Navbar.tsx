@@ -49,7 +49,7 @@ export function Navbar() {
           
           {/* Logo */}
           <Link href="/" className="flex items-center group cursor-pointer">
-            <div className="relative h-8 w-[222.666px]">
+            <div className="relative h-7 w-[180px]">
               <Image
                 src="/buildbridge-logo-primary.svg"
                 alt="BuildBridge"
@@ -88,7 +88,7 @@ export function Navbar() {
                   className={`hidden sm:flex group cursor-pointer text-sm font-black items-center gap-2 transition-colors duration-300 ${isScrolled ? 'text-on-surface-variant hover:text-primary' : 'text-on-surface-variant hover:text-primary'}`}
                 >
                   <User className="h-4 w-4" />
-                  {demoUser?.name?.split(' ')[0] || "Dashboard"}
+                  Login
                 </Link>
                 
                 <button
@@ -96,12 +96,11 @@ export function Navbar() {
                     signOut();
                     router.push("/");
                   }}
-                  className={`hidden sm:flex h-11 px-6 rounded-full font-extrabold text-xs transition-all items-center justify-center gap-2 hover:bg-error/5 hover:text-error border border-outline-variant/50 ${
-                    isScrolled ? 'text-on-surface-variant' : 'text-on-surface-variant'
+                  className={`hidden sm:flex h-11 px-7 rounded-full font-extrabold text-sm transition-all items-center justify-center hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/10 ${
+                    isScrolled ? 'bg-primary text-white' : 'bg-primary text-white'
                   }`}
                 >
-                  <LogOut className="h-4 w-4" />
-                  Logout
+                  Get Started
                 </button>
               </>
             ) : (
