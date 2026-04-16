@@ -107,28 +107,12 @@ export function OnboardingForm() {
       // Demo Mode: Simulate short network delay
       await new Promise(resolve => setTimeout(resolve, 500))
       
-      // Auto-Login Logic
-      let authResult;
-      if (formData.email) {
-        authResult = await signInDemoEmail(formData.email, formData.full_name);
-      } else if (formData.phone) {
-        // For demo auto-login, we assume the user would have verified OTP
-        // but here we just simulate successful verification for the demo flow
-        authResult = await verifyDemoOtp(formData.phone, "123456", formData.full_name);
-      } else {
-        // Fallback if somehow no contact info
-        localStorage.setItem("buildbridge_temp_name", formData.full_name);
-        router.push("/signup");
-        return;
-      }
-
-      if (authResult.success) {
-        // Persist name for demo persistence
-        localStorage.setItem("buildbridge_user_name", formData.full_name);
-        router.push("/dashboard");
-      } else {
-        setError(authResult.error || "Failed to complete your profile.");
-      }
+      // Store onboarding data for pre-filling the signup form
+      localStorage.setItem("buildbridge_onboarding_data", JSON.stringify(formData));
+      localStorage.setItem("buildbridge_temp_name", formData.full_name);
+      
+      // Navigate to Sign-Up as the next step in the journey
+      router.push("/signup");
     } catch (err: any) {
       console.error("Onboarding error:", err)
       setError(err.message || "Something went wrong.")

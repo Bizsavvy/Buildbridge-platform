@@ -58,7 +58,7 @@ function saveDemoUser(user: DemoUser | null) {
     if (user) {
       localStorage.setItem(DEMO_USER_KEY, JSON.stringify(user));
       // Set cookie for middleware (expires in 7 days)
-      document.cookie = `${DEMO_COOKIE_NAME}=true; path=/; max-age=${7 * 24 * 60 * 60}`;
+      document.cookie = `${DEMO_COOKIE_NAME}=true; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
     } else {
       localStorage.removeItem(DEMO_USER_KEY);
       // Remove cookie

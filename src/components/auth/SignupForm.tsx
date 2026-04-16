@@ -14,7 +14,8 @@ import { cn } from "@/lib/utils"
 export default function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectPath = searchParams.get("redirect") || "/dashboard"
+  // Support both 'redirect' and 'redirectTo' (middleware uses redirectTo)
+  const redirectPath = searchParams.get("redirectTo") || searchParams.get("redirect") || "/dashboard"
   
   const { sendDemoOtp, verifyDemoOtp, signInDemoEmail } = useDemoAuth()
   
@@ -47,8 +48,27 @@ export default function SignupForm() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("buildbridge_temp_name");
-      if (stored) setTempName(stored);
+      // Priority 1: Full onboarding data
+      const onboardingDataRaw = localStorage.getItem("buildbridge_onboarding_data");
+      if (onboardingDataRaw) {
+        try {
+          const data = JSON.parse(onboardingDataRaw);
+          if (data.full_name) setTempName(data.full_name);
+          if (data.phone) {
+            setPhone(data.phone);
+            setMethod("phone");
+          } else if (data.email) {
+            setEmail(data.email);
+            setMethod("email");
+          }
+        } catch (e) {
+          console.error("Error parsing onboarding data", e);
+        }
+      } else {
+        // Priority 2: Legacy temp name
+        const stored = localStorage.getItem("buildbridge_temp_name");
+        if (stored) setTempName(stored);
+      }
     }
   }, [])
 
@@ -101,6 +121,7 @@ export default function SignupForm() {
     const result = await signInDemoEmail(email, tempName)
     if (result.success) {
       localStorage.removeItem("buildbridge_temp_name")
+      localStorage.removeItem("buildbridge_onboarding_data")
       router.push(redirectPath)
     } else {
       setErrorMsg(result.error || "Signup failed.")
@@ -150,6 +171,7 @@ export default function SignupForm() {
     
     if (result.success) {
       localStorage.removeItem("buildbridge_temp_name")
+      localStorage.removeItem("buildbridge_onboarding_data")
       router.push(redirectPath)
     } else {
       setErrorMsg(result.error || "Invalid OTP. Please try again.")
