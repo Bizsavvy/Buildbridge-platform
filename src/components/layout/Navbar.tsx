@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Menu, Hammer } from "lucide-react"
+import Image from "next/image"
+import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { MobileNav } from "./MobileNav"
 
@@ -43,13 +44,16 @@ export function Navbar() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group cursor-pointer group">
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white text-primary shadow-xl'}`}>
-              <Hammer className="h-5 w-5" />
+          <Link href="/" className="flex items-center group cursor-pointer">
+            <div className="relative h-8 w-[222.666px]">
+              <Image
+                src="/buildbridge-logo-primary.svg"
+                alt="BuildBridge"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className={`text-xl font-black tracking-tight transition-colors duration-300 ${isScrolled ? 'text-on-surface' : 'text-primary'}`}>
-              BuildBridge
-            </span>
           </Link>
 
           {/* Centered Desktop Nav */}
