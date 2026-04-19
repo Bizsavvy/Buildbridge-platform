@@ -12,7 +12,7 @@
 
 // ─── DEMO MODE FLAG ────────────────────────────────────────────────────────────
 // Flip this to `false` to reconnect real Supabase
-export const DEMO_MODE = true;
+export const DEMO_MODE = false;
 // ────────────────────────────────────────────────────────────────────────────────
 
 import { createServerClient } from "@supabase/ssr";

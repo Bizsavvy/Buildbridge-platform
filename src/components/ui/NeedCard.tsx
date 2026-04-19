@@ -65,7 +65,6 @@ export function NeedCard({ need, className, onClick }: NeedCardProps) {
             src={need.photo_url}
             alt={need.item_name}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-surface-variant/30">

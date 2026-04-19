@@ -95,7 +95,7 @@ export function Hero({ stats }: HeroProps) {
             </Link>
             <Link 
               href="/onboarding"
-              className="h-16 px-10 rounded-full bg-primary text-white font-black text-lg transition-all flex items-center justify-center hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-primary/20"
+              className="h-16 px-10 rounded-full border-2 border-primary text-primary bg-transparent font-black text-lg transition-all flex items-center justify-center hover:bg-primary/5 active:scale-[0.98]"
             >
               Join as Artisan
             </Link>

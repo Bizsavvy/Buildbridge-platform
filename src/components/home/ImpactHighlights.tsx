@@ -15,7 +15,7 @@ const sections = [
       "100% of capital reaches the tradesperson",
       "Real-time funding progress tracking"
     ],
-    image: "https://images.unsplash.com/photo-1619211091515-585a9bc81134?auto=format&fit=crop&q=80&w=800",
+    image: "/images/hero/tailor.png",
     imageFirst: true
   },
   {
@@ -27,7 +27,7 @@ const sections = [
       "Community leader endorsement system",
       "Proof-of-trade physical verification"
     ],
-    image: "https://images.unsplash.com/photo-1590483861805-72886f4a4789?auto=format&fit=crop&q=80&w=800",
+    image: "/images/hero/carpenter.png",
     imageFirst: false
   }
 ]
@@ -51,12 +51,11 @@ export function ImpactHighlights() {
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-primary/10 rounded-[3rem] translate-x-4 translate-y-4 -z-10 transition-transform group-hover:translate-x-6 group-hover:translate-y-6" />
-                <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white">
+                <div className="aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white relative w-full h-full block">
                   <img 
                     src={section.image} 
                     alt={section.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                    loading="lazy"
                   />
                 </div>
                 {/* Floating Badge */}
@@ -106,12 +105,6 @@ export function ImpactHighlights() {
               </ul>
 
               <div className="flex flex-col sm:flex-row gap-6">
-                 <Link 
-              href="/onboarding" 
-              className="mt-4 px-6 py-2 rounded-full font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center justify-center"
-            >
-              Get Started
-            </Link>
                  <Link href="/how-it-works" className="h-12 px-8 rounded-full border-2 border-outline-variant text-on-surface font-black text-sm hover:bg-surface-variant/30 transition-all flex items-center gap-2">
                     Learn More
                     <ArrowRight className="h-4 w-4" />

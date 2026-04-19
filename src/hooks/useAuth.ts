@@ -10,7 +10,7 @@ import { useDemoAuth } from "@/contexts/DemoAuthContext"
  *   2. Uncomment the Supabase imports and logic
  */
 
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 // import { createClient } from "@/lib/supabase/client"
 // import { type User } from "@supabase/supabase-js"

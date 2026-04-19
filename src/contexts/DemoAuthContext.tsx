@@ -2,9 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 
-const DEMO_OTP = "123456";
 const DEMO_USER_KEY = "buildbridge_demo_user";
-const DEMO_OTP_KEY = "buildbridge_demo_otp";
 const DEMO_COOKIE_NAME = "buildbridge_demo_session";
 
 interface DemoUser {
@@ -14,15 +12,9 @@ interface DemoUser {
   verifiedAt: number;
 }
 
-interface DemoOtpSession {
-  phone: string;
-  expiresAt: number;
-}
-
 interface DemoAuthContextType {
   isAuthenticated: boolean;
   demoUser: DemoUser | null;
-  otpSession: DemoOtpSession | null;
   sendDemoOtp: (phone: string) => Promise<{ success: boolean; error?: string }>;
   verifyDemoOtp: (phone: string, token: string, name?: string) => Promise<{ success: boolean; error?: string }>;
   signInDemoEmail: (email: string, name?: string) => Promise<{ success: boolean; error?: string }>;
@@ -31,8 +23,6 @@ interface DemoAuthContextType {
 }
 
 const DemoAuthContext = createContext<DemoAuthContextType | null>(null);
-
-const SESSION_DURATION = 5 * 60 * 1000;
 
 function loadDemoUser(): DemoUser | null {
   if (typeof window === "undefined") return null;
@@ -69,114 +59,85 @@ function saveDemoUser(user: DemoUser | null) {
   }
 }
 
-function loadOtpSession(): DemoOtpSession | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem(DEMO_OTP_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (Date.now() < parsed.expiresAt) {
-        return parsed;
-      } else {
-        localStorage.removeItem(DEMO_OTP_KEY);
-      }
-    }
-  } catch {
-    // ignore
+/**
+ * Normalise a Nigerian phone number to E.164 format (client-side mirror
+ * of the server-side helper so we can store a canonical phone in state).
+ */
+function toE164(phone: string): string {
+  let cleaned = phone.replace(/[\s\-()]/g, "");
+  if (cleaned.startsWith("0") && cleaned.length === 11) {
+    return "+234" + cleaned.slice(1);
   }
-  return null;
-}
-
-function saveOtpSession(session: DemoOtpSession | null) {
-  if (typeof window === "undefined") return;
-  try {
-    if (session) {
-      localStorage.setItem(DEMO_OTP_KEY, JSON.stringify(session));
-    } else {
-      localStorage.removeItem(DEMO_OTP_KEY);
-    }
-  } catch {
-    // ignore
+  if (cleaned.startsWith("234") && !cleaned.startsWith("+")) {
+    return "+" + cleaned;
   }
+  if (!cleaned.startsWith("+")) {
+    return "+234" + cleaned;
+  }
+  return cleaned;
 }
 
 export function DemoAuthProvider({ children }: { children: ReactNode }) {
   const [demoUser, setDemoUser] = useState<DemoUser | null>(null);
-  const [otpSession, setOtpSession] = useState<DemoOtpSession | null>(null);
 
   useEffect(() => {
     setDemoUser(loadDemoUser());
-    setOtpSession(loadOtpSession());
   }, []);
 
+  // ── REAL Twilio Verify: Send OTP ──────────────────────────────────────────
   const sendDemoOtp = useCallback(async (phone: string) => {
-    // Simulation delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
 
-    let cleanPhone = phone.trim();
-    if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
-      cleanPhone = "+234" + cleanPhone.slice(1);
-    } else if (!cleanPhone.startsWith("+")) {
-      cleanPhone = "+234" + cleanPhone;
+      const data = await res.json();
+
+      if (data.success) {
+        return { success: true };
+      }
+
+      return { success: false, error: data.error || "Failed to send OTP." };
+    } catch (err: any) {
+      console.error("sendDemoOtp error:", err);
+      return { success: false, error: "Network error. Please check your connection." };
     }
-
-    const expiresAt = Date.now() + SESSION_DURATION;
-    const session = {
-      phone: cleanPhone,
-      expiresAt,
-    };
-    
-    setOtpSession(session);
-    saveOtpSession(session);
-
-    return { success: true };
   }, []);
 
+  // ── REAL Twilio Verify: Check OTP ─────────────────────────────────────────
   const verifyDemoOtp = useCallback(async (phone: string, token: string, name?: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, code: token }),
+      });
 
-    let cleanPhone = phone.trim();
-    if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
-      cleanPhone = "+234" + cleanPhone.slice(1);
-    } else if (!cleanPhone.startsWith("+")) {
-      cleanPhone = "+234" + cleanPhone;
+      const data = await res.json();
+
+      if (data.success && data.status === "approved") {
+        const user: DemoUser = {
+          name: name || (typeof window !== "undefined" ? localStorage.getItem("buildbridge_user_name") || undefined : undefined),
+          phone: toE164(phone),
+          verifiedAt: Date.now(),
+        };
+
+        setDemoUser(user);
+        saveDemoUser(user);
+
+        return { success: true };
+      }
+
+      return { success: false, error: data.error || "Invalid OTP. Please try again." };
+    } catch (err: any) {
+      console.error("verifyDemoOtp error:", err);
+      return { success: false, error: "Network error. Please check your connection." };
     }
-
-    // Check if session exists (either in state or loaded from storage)
-    if (!otpSession || otpSession.phone !== cleanPhone) {
-      return { success: false, error: "No OTP session found. Please request a new code." };
-    }
-
-    if (Date.now() > otpSession.expiresAt) {
-      setOtpSession(null);
-      saveOtpSession(null);
-      return { success: false, error: "OTP has expired. Please request a new code." };
-    }
-
-    // MANDATORY DEMO RULE: Only 123456 is valid
-    if (token !== DEMO_OTP) {
-      return { success: false, error: "Invalid OTP. For demo purposes, use 123456." };
-    }
-
-    const user: DemoUser = {
-      name: name || (typeof window !== "undefined" ? localStorage.getItem("buildbridge_user_name") || undefined : undefined),
-      phone: cleanPhone,
-      verifiedAt: Date.now(),
-    };
-
-    setOtpSession(null);
-    saveOtpSession(null);
-    setDemoUser(user);
-    saveDemoUser(user);
-
-    return { success: true };
-  }, [otpSession]);
-
-  const clearDemoSession = useCallback(() => {
-    setOtpSession(null);
-    saveOtpSession(null);
   }, []);
 
+  // ── Email sign-in (demo mode — kept simple) ───────────────────────────────
   const signInDemoEmail = useCallback(async (email: string, name?: string) => {
     // Simulation delay
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -193,9 +154,12 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   }, []);
 
+  const clearDemoSession = useCallback(() => {
+    // No OTP session state to clear anymore — Twilio manages it server-side
+  }, []);
+
   const signOut = useCallback(() => {
     setDemoUser(null);
-    setOtpSession(null);
     saveDemoUser(null);
   }, []);
 
@@ -204,7 +168,6 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
       value={{
         isAuthenticated: demoUser !== null,
         demoUser,
-        otpSession,
         sendDemoOtp,
         verifyDemoOtp,
         signInDemoEmail,
@@ -224,5 +187,3 @@ export function useDemoAuth() {
   }
   return context;
 }
-
-export { DEMO_OTP };

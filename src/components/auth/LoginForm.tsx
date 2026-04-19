@@ -11,11 +11,11 @@ import Link from "next/link"
 import { Phone, ArrowRight, ShieldCheck, Mail, Sparkles, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const DEMO_MODE = true
+const DEMO_MODE = false
 
 export default function LoginForm() {
   const router = useRouter()
-  const { sendDemoOtp, verifyDemoOtp, signInDemoEmail, otpSession } = useDemoAuth()
+  const { sendDemoOtp, verifyDemoOtp, signInDemoEmail } = useDemoAuth()
 
   // Method Selection
   const [method, setMethod] = useState<"phone" | "email">("phone")
@@ -51,13 +51,8 @@ export default function LoginForm() {
     return () => clearInterval(timer)
   }, [step, timeLeft])
 
-  // Resume session if exists
-  useEffect(() => {
-    if (otpSession && step === 'enter') {
-      setStep('otp')
-      setFormattedPhone(otpSession.phone)
-    }
-  }, [otpSession, step])
+  // OTP session is now managed server-side by Twilio Verify.
+  // No client-side session resumption needed.
 
   const formatTime = (seconds: number) => {
     const min = Math.floor(seconds / 60)

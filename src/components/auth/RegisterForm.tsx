@@ -11,7 +11,7 @@ import { Phone, ArrowRight, ShieldCheck, CheckCircle } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { useDemoAuth } from "@/contexts/DemoAuthContext"
 
-const DEMO_MODE = true
+const DEMO_MODE = false
 
 export default function RegisterForm() {
   const router = useRouter()

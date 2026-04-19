@@ -9,7 +9,7 @@
  *   3. Restore the full auth check, upload, and database insert logic
  */
 
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 // Keep real imports for when demo is disabled
 import { createClient } from "@/lib/supabase/server"

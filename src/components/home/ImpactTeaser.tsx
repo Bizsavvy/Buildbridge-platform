@@ -15,7 +15,7 @@ const stories = [
     trade: "Welder",
     location: "Kano",
     caption: "The industrial welding machine I received through BuildBridge allowed me to take on high-rise construction contracts.",
-    image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800",
+    image: "/images/hero/carpenter.png",
   },
   {
     id: "2",
@@ -23,7 +23,7 @@ const stories = [
     trade: "Tailor",
     location: "Lagos",
     caption: "Before BuildBridge, I was renting my equipment. Now I own my shop and three professional machines.",
-    image: "https://images.unsplash.com/photo-1558223932-901848bc4e92?auto=format&fit=crop&q=80&w=800",
+    image: "/images/hero/tailor.png",
   },
   {
     id: "3",
@@ -31,7 +31,7 @@ const stories = [
     trade: "Carpenter",
     location: "Enugu",
     caption: "The electric planer changed everything for my workshop. Faster delivery times meant more clients.",
-    image: "https://images.unsplash.com/photo-1536412597336-ade7b523ec3f?auto=format&fit=crop&q=80&w=800",
+    image: "/images/hero/baker.png",
   }
 ]
 
@@ -65,7 +65,6 @@ export function ImpactTeaser() {
                 src={story.image} 
                 alt={story.name} 
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                loading="lazy"
               />
               {/* Overlay Content */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-10">

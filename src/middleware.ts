@@ -12,7 +12,7 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 
 // ─── DEMO MODE FLAG ────────────────────────────────────────────────────────────
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 // ────────────────────────────────────────────────────────────────────────────────
 
 // import { createServerClient } from "@supabase/ssr"; // Re-enable for real Supabase

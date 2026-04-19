@@ -12,7 +12,7 @@
 
 // ─── DEMO MODE FLAG ────────────────────────────────────────────────────────────
 // Flip this to `false` to reconnect real Supabase
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 // ────────────────────────────────────────────────────────────────────────────────
 
 import { createBrowserClient } from "@supabase/ssr";
