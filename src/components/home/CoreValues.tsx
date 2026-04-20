@@ -17,7 +17,7 @@ const values = [
     title: "Direct Support",
     desc: "Capital goes directly to equipment purchase, zero middlemen involved.",
     color: "bg-yellow-400",
-    iconColor: "text-black"
+    iconColor: "text-white"
   },
   {
     icon: HeartHandshake,
@@ -31,7 +31,7 @@ const values = [
     title: "Total Transparency",
     desc: "Get real-time updates and proof-of-use photos for every kobo funded.",
     color: "bg-[#7C3AED]/15", // Soft Purple
-    iconColor: "text-primary",
+    iconColor: "text-white",
     border: "border-primary/20",
     darkText: true
   },
@@ -46,7 +46,7 @@ const values = [
     icon: Lock,
     title: "Secure Escrow",
     desc: "Payments are held securely using Paystack until funding is complete.",
-    color: "bg-black",
+    color: "bg-slate-900",
     iconColor: "text-white"
   }
 ]
@@ -75,7 +75,7 @@ export function CoreValues() {
               className={`p-8 rounded-[2rem] flex flex-col gap-6 transition-transform hover:-translate-y-1 hover:shadow-xl ${item.color} ${item.border || ''} ${item.darkText ? 'text-on-surface' : 'text-white'}`}
             >
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${item.darkText ? 'bg-primary/10' : 'bg-white/20'}`}>
-                <item.icon className={`h-7 w-7 ${item.darkText ? 'text-primary' : 'text-white'}`} />
+                <item.icon className={`h-7 w-7 ${item.iconColor ? item.iconColor : (item.darkText ? 'text-primary' : 'text-white')}`} />
               </div>
               <div>
                 <h3 className={`text-xl font-black mb-3 ${item.darkText ? 'text-on-surface' : 'text-white'}`}>

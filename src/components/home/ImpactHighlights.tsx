@@ -105,7 +105,7 @@ export function ImpactHighlights() {
               </ul>
 
               <div className="flex flex-col sm:flex-row gap-6">
-                 <Link href="/how-it-works" className="h-12 px-8 rounded-full border-2 border-outline-variant text-on-surface font-black text-sm hover:bg-surface-variant/30 transition-all flex items-center gap-2">
+                 <Link href="/how-it-works" className="w-full sm:w-auto h-12 px-8 rounded-full border-2 border-outline-variant text-on-surface font-black text-sm transition-all flex items-center justify-center gap-2 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 hover:border-primary hover:text-primary hover:bg-primary/5 active:scale-95">
                     Learn More
                     <ArrowRight className="h-4 w-4" />
                  </Link>

@@ -75,7 +75,7 @@ export function Navbar() {
           
           {/* Logo */}
           <Link href="/" className="flex items-center group cursor-pointer">
-            <div className="relative h-7 w-[180px]">
+            <div className="relative h-6 w-[150px]">
               <Image
                 src="/buildbridge-logo-primary.svg"
                 alt="BuildBridge"
@@ -128,7 +128,7 @@ export function Navbar() {
                </>
              ) : (
               <>
-                <Link href="/login" className={`hidden sm:flex group cursor-pointer text-sm font-bold transition-colors duration-300 ${isScrolled ? 'text-on-surface-variant hover:text-primary' : 'text-on-surface-variant hover:text-primary'}`}>
+                <Link href="/login" className={`hidden sm:flex group cursor-pointer text-sm font-bold tracking-wide transition-all duration-300 hover:scale-105 ${isScrolled ? 'text-on-surface-variant hover:text-primary' : 'text-on-surface-variant hover:text-primary'}`}>
                   Log In
                 </Link>
                 

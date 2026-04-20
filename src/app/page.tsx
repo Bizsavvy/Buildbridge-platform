@@ -4,6 +4,7 @@ import { FeaturedNeeds } from "@/components/home/FeaturedNeeds"
 import { HowItWorks } from "@/components/home/HowItWorks"
 import { PartnerLogos } from "@/components/home/PartnerLogos"
 import { CoreValues } from "@/components/home/CoreValues"
+import { Stats } from "@/components/home/Stats"
 import { ImpactHighlights } from "@/components/home/ImpactHighlights"
 import { ImpactTeaser } from "@/components/home/ImpactTeaser"
 import { FinalCTA } from "@/components/home/FinalCTA"
@@ -99,7 +100,7 @@ const MOCK_FEATURED_NEEDS = [
 export default async function Home() {
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
-       <Hero stats={MOCK_STATS} isLoading={false} />
+       <Hero />
       
       <PartnerLogos />
 
@@ -111,6 +112,8 @@ export default async function Home() {
        <FeaturedNeeds needs={MOCK_FEATURED_NEEDS as any} isLoading={false} />
       
       <HowItWorks />
+      
+      <Stats stats={MOCK_STATS} isLoading={false} />
       
       <ImpactTeaser />
       
