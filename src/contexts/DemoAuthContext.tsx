@@ -59,24 +59,6 @@ function saveDemoUser(user: DemoUser | null) {
   }
 }
 
-/**
- * Normalise a Nigerian phone number to E.164 format (client-side mirror
- * of the server-side helper so we can store a canonical phone in state).
- */
-function toE164(phone: string): string {
-  let cleaned = phone.replace(/[\s\-()]/g, "");
-  if (cleaned.startsWith("0") && cleaned.length === 11) {
-    return "+234" + cleaned.slice(1);
-  }
-  if (cleaned.startsWith("234") && !cleaned.startsWith("+")) {
-    return "+" + cleaned;
-  }
-  if (!cleaned.startsWith("+")) {
-    return "+234" + cleaned;
-  }
-  return cleaned;
-}
-
 export function DemoAuthProvider({ children }: { children: ReactNode }) {
   const [demoUser, setDemoUser] = useState<DemoUser | null>(null);
 
@@ -92,30 +74,15 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone }),
       });
-
-    try {
-      let cleanPhone = phone.trim();
-      if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
-        cleanPhone = "+234" + cleanPhone.slice(1);
-      } else if (!cleanPhone.startsWith("+")) {
-        cleanPhone = "+234" + cleanPhone;
-      }
-
-      // Basic validation: Nigerian phone numbers should be +234 followed by 10 digits
-      if (!/^\+234\d{10}$/.test(cleanPhone)) {
-        return { success: false, error: "Please enter a valid Nigerian phone number (e.g., 08012345678)." };
-      }
-
-      const expiresAt = Date.now() + SESSION_DURATION;
-      const session = {
-        phone: cleanPhone,
-        expiresAt,
-      };
+      const data = await res.json();
       
-      setOtpSession(session);
-      saveOtpSession(session);
-
-      return { success: true };
+      // Fallback to local demo mode if Twilio credentials are missing
+      if (res.status === 500 && data.error && data.error.includes("Missing Twilio credentials")) {
+         console.warn("Twilio credentials missing. Using local demo fallback.");
+         return { success: true };
+      }
+      
+      return data;
     } catch (error) {
       console.error("Failed to send demo OTP:", error);
       return { success: false, error: "Failed to send OTP. Please try again." };
@@ -124,58 +91,49 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
 
   // ── REAL Twilio Verify: Check OTP ─────────────────────────────────────────
   const verifyDemoOtp = useCallback(async (phone: string, token: string, name?: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
     try {
-      let cleanPhone = phone.trim();
-      if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
-        cleanPhone = "+234" + cleanPhone.slice(1);
-      } else if (!cleanPhone.startsWith("+")) {
-        cleanPhone = "+234" + cleanPhone;
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, code: token }),
+      });
+      const data = await res.json();
+
+      let isSuccess = data.success;
+      
+      // Fallback to local demo mode if Twilio credentials are missing
+      if (res.status === 500 && data.error && data.error.includes("Missing Twilio credentials")) {
+         if (token === "123456") {
+             isSuccess = true;
+         } else {
+             return { success: false, error: "Invalid OTP. For demo purposes without Twilio, use 123456." };
+         }
       }
 
-      // Basic validation: Nigerian phone numbers should be +234 followed by 10 digits
-      if (!/^\+234\d{10}$/.test(cleanPhone)) {
-        return { success: false, error: "Please enter a valid Nigerian phone number (e.g., 08012345678)." };
+      if (isSuccess) {
+        let cleanPhone = phone.trim();
+        if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
+          cleanPhone = "+234" + cleanPhone.slice(1);
+        } else if (!cleanPhone.startsWith("+")) {
+          cleanPhone = "+234" + cleanPhone;
+        }
+
+        const user: DemoUser = {
+          name: name || (typeof window !== "undefined" ? localStorage.getItem("buildbridge_user_name") || undefined : undefined),
+          phone: cleanPhone,
+          verifiedAt: Date.now(),
+        };
+
+        setDemoUser(user);
+        saveDemoUser(user);
+
+        return { success: true };
       }
-
-      // Check if session exists (either in state or loaded from storage)
-      if (!otpSession || otpSession.phone !== cleanPhone) {
-        return { success: false, error: "No OTP session found. Please request a new code." };
-      }
-
-      if (Date.now() > otpSession.expiresAt) {
-        setOtpSession(null);
-        saveOtpSession(null);
-        return { success: false, error: "OTP has expired. Please request a new code." };
-      }
-
-      // MANDATORY DEMO RULE: Only 123456 is valid
-      if (token !== DEMO_OTP) {
-        return { success: false, error: "Invalid OTP. For demo purposes, use 123456." };
-      }
-
-      const user: DemoUser = {
-        name: name || (typeof window !== "undefined" ? localStorage.getItem("buildbridge_user_name") || undefined : undefined),
-        phone: cleanPhone,
-        verifiedAt: Date.now(),
-      };
-
-      setOtpSession(null);
-      saveOtpSession(null);
-      setDemoUser(user);
-      saveDemoUser(user);
-
-      return { success: true };
+      return { success: false, error: data.error || "Invalid OTP" };
     } catch (error) {
       console.error("Failed to verify demo OTP:", error);
       return { success: false, error: "Failed to verify OTP. Please try again." };
     }
-  }, [otpSession]);
-
-  const clearDemoSession = useCallback(() => {
-    setOtpSession(null);
-    saveOtpSession(null);
   }, []);
 
   // ── Email sign-in (demo mode — kept simple) ───────────────────────────────
