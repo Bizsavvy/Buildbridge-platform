@@ -475,13 +475,20 @@ export default function NeedCreationFlow() {
   // Handle Google OAuth
   const handleGoogleAuth = async () => {
     setIsLoading(true)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${baseUrl}/auth/callback?next=/create-need`
-      }
-    })
+    setAuthError('')
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${baseUrl}/auth/callback?next=/create-need`
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      setAuthError('Failed to sign in with Google. Please check your configuration and try again.')
+      setIsLoading(false)
+    }
   }
   
 

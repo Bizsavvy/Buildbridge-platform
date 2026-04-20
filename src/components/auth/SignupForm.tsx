@@ -117,6 +117,25 @@ export default function SignupForm() {
     }
   }
 
+  // Handle Google OAuth
+  const handleGoogleAuth = async () => {
+    setIsLoading(true)
+    setErrorMsg(null)
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${baseUrl}/auth/callback?next=${redirectPath}`
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      setErrorMsg('Failed to sign in with Google. Please check your configuration and try again.')
+      setIsLoading(false)
+    }
+  }
+
   // Handle Phone Signup - send OTP via Twilio
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

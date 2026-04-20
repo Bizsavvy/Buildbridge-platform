@@ -165,13 +165,19 @@ export function OnboardingForm() {
 
   const handleGoogleAuth = async () => {
     setLoading(true)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${baseUrl}/auth/callback?next=/onboarding`
-      }
-    })
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${baseUrl}/auth/callback?next=/onboarding`
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      alert('Failed to sign in with Google. Please check your configuration and try again.')
+      setLoading(false)
+    }
   }
 
   const handleSendOTP = async () => {
