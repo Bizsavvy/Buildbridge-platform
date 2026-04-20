@@ -105,6 +105,19 @@ export function NeedCard({ need, className, onClick }: NeedCardProps) {
     : need.profile?.badge_level === 'level_2_trusted_tradesperson' ? 2 
     : need.profile?.badge_level === 'level_1_community_member' ? 1 : 0;
 
+  const [isVouched, setIsVouched] = React.useState(false);
+  const [localVouchCount, setLocalVouchCount] = React.useState(need.profile?.vouch_count || 0);
+
+  const handleVouchClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isVouched) {
+      setLocalVouchCount(prev => prev - 1);
+    } else {
+      setLocalVouchCount(prev => prev + 1);
+    }
+    setIsVouched(!isVouched);
+  };
+
   return (
     <Card 
       hoverLift 
@@ -239,9 +252,20 @@ export function NeedCard({ need, className, onClick }: NeedCardProps) {
         <div className="pt-6 border-t border-outline-variant/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
              <Badge level={badgeLevel as 0|1|2|3|4} />
-             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-error/5 group cursor-pointer transition-colors hover:bg-error/10">
-                <Heart className="h-4 w-4 text-error fill-current" />
-                <span className="text-xs font-black text-on-surface">{need.profile?.vouch_count || 0}</span>
+             <div 
+                onClick={handleVouchClick}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all cursor-pointer",
+                  isVouched ? "bg-error/10" : "bg-error/5 hover:bg-error/10"
+                )}
+             >
+                <Heart 
+                  className={cn(
+                    "h-4 w-4 text-error transition-transform duration-300",
+                    isVouched ? "fill-error scale-110" : "fill-none"
+                  )} 
+                />
+                <span className="text-xs font-black text-on-surface">{localVouchCount}</span>
              </div>
           </div>
            <Button 
