@@ -1,5 +1,6 @@
 # 🌉 BuildBridge
 
+
 **Micro-crowdfunding for Nigerian tradespeople — built with trust, backed by community**
 
 BuildBridge is a Nigeria-native, web-based micro-crowdfunding platform exclusively for informal tradespeople and micro-entrepreneurs. We enable artisans to create targeted, small-scale funding requests for specific business needs while building trust through community vouching and verification.
