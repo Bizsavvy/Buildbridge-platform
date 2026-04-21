@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 import NeedCreationFlow from "@/components/need-creation/NeedCreationFlow"
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 }
 
 export default function CreateNeedPage() {
-  return <NeedCreationFlow />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NeedCreationFlow />
+    </Suspense>
+  )
 }
