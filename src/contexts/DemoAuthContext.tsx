@@ -4,12 +4,20 @@ import { createContext, useContext, useState, useCallback, useEffect, ReactNode 
 
 const DEMO_USER_KEY = "buildbridge_demo_user";
 const DEMO_COOKIE_NAME = "buildbridge_demo_session";
+const OTP_SESSION_KEY = "buildbridge_demo_otp_session";
+const SESSION_DURATION = 10 * 60 * 1000; // 10 minutes
+const DEMO_OTP = "123456";
 
 interface DemoUser {
   name?: string;
   phone?: string;
   email?: string;
   verifiedAt: number;
+}
+
+interface OtpSession {
+  phone: string;
+  expiresAt: number;
 }
 
 interface DemoAuthContextType {
@@ -59,15 +67,65 @@ function saveDemoUser(user: DemoUser | null) {
   }
 }
 
+<<<<<<< HEAD
+=======
+function loadOtpSession(): OtpSession | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = localStorage.getItem(OTP_SESSION_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+function saveOtpSession(session: OtpSession | null) {
+  if (typeof window === "undefined") return;
+  try {
+    if (session) {
+      localStorage.setItem(OTP_SESSION_KEY, JSON.stringify(session));
+    } else {
+      localStorage.removeItem(OTP_SESSION_KEY);
+    }
+  } catch {
+    // ignore
+  }
+}
+
+/**
+ * Normalise a Nigerian phone number to E.164 format (client-side mirror
+ * of the server-side helper so we can store a canonical phone in state).
+ */
+function toE164(phone: string): string {
+  let cleaned = phone.replace(/[\s\-()]/g, "");
+  if (cleaned.startsWith("0") && cleaned.length === 11) {
+    return "+234" + cleaned.slice(1);
+  }
+  if (cleaned.startsWith("234") && !cleaned.startsWith("+")) {
+    return "+" + cleaned;
+  }
+  if (!cleaned.startsWith("+")) {
+    return "+234" + cleaned;
+  }
+  return cleaned;
+}
+
+>>>>>>> 5bb8cfd (Set up Google OAuth)
 export function DemoAuthProvider({ children }: { children: ReactNode }) {
   const [demoUser, setDemoUser] = useState<DemoUser | null>(null);
+  const [otpSession, setOtpSession] = useState<OtpSession | null>(null);
 
   useEffect(() => {
     setDemoUser(loadDemoUser());
+    setOtpSession(loadOtpSession());
   }, []);
 
   // ── REAL Twilio Verify: Send OTP ──────────────────────────────────────────
   const sendDemoOtp = useCallback(async (phone: string) => {
+<<<<<<< HEAD
     try {
       const res = await fetch("/api/auth/send-otp", {
         method: "POST",
@@ -83,6 +141,34 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
       }
       
       return data;
+=======
+    // Simulation delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    try {
+      let cleanPhone = phone.trim();
+      if (cleanPhone.startsWith("0") && cleanPhone.length === 11) {
+        cleanPhone = "+234" + cleanPhone.slice(1);
+      } else if (!cleanPhone.startsWith("+")) {
+        cleanPhone = "+234" + cleanPhone;
+      }
+
+      // Basic validation: Nigerian phone numbers should be +234 followed by 10 digits
+      if (!/^\+234\d{10}$/.test(cleanPhone)) {
+        return { success: false, error: "Please enter a valid Nigerian phone number (e.g., 08012345678)." };
+      }
+
+      const expiresAt = Date.now() + SESSION_DURATION;
+      const session = {
+        phone: cleanPhone,
+        expiresAt,
+      };
+
+      setOtpSession(session);
+      saveOtpSession(session);
+
+      return { success: true };
+>>>>>>> 5bb8cfd (Set up Google OAuth)
     } catch (error) {
       console.error("Failed to send demo OTP:", error);
       return { success: false, error: "Failed to send OTP. Please try again." };
@@ -158,9 +244,7 @@ export function DemoAuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const clearDemoSession = useCallback(() => {
-    // No OTP session state to clear anymore — Twilio manages it server-side
-  }, []);
+
 
   const signOut = useCallback(() => {
     setDemoUser(null);

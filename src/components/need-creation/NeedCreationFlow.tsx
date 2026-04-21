@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useState, useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
@@ -47,14 +47,26 @@ const NIGERIAN_STATES = Object.keys(NIGERIA_LOCATIONS).sort()
 
 export default function NeedCreationFlow() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const [currentStep, setCurrentStep] = useState(0)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [hasProfile, setHasProfile] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [isGeneratingStory, setIsGeneratingStory] = useState(false)
   const [isGeneratingImpact, setIsGeneratingImpact] = useState(false)
   const [regenerateCount, setRegenerateCount] = useState(0)
   
+  // Debug: log search params and auth state
+  useEffect(() => {
+    console.log('NeedCreationFlow mount:', { 
+      searchParams: searchParams ? Object.fromEntries(searchParams.entries()) : null,
+      isAuthenticated,
+      hasProfile,
+      isLoading 
+    })
+  }, [searchParams, isAuthenticated, hasProfile, isLoading])
+
   // Form state
   const [formData, setFormData] = useState({
     // Screen 1
@@ -122,20 +134,86 @@ export default function NeedCreationFlow() {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      setIsAuthenticated(!!session)
+      const authenticated = !!session
+      setIsAuthenticated(authenticated)
+      
+      if (authenticated && session?.user) {
+        // Check if user has a profile
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .maybeSingle()
+        
+        if (!error && profile) {
+          console.log('User has profile, setting hasProfile to true')
+          setHasProfile(true)
+        } else {
+          console.log('User has no profile or error checking:', error)
+          setHasProfile(false)
+        }
+      } else {
+        setHasProfile(false)
+      }
+      
       setIsLoading(false)
     }
     checkAuth()
     
     // Subscribe to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const authenticated = !!session
+      setIsAuthenticated(authenticated)
+      
+      if (authenticated && session?.user) {
+        // Check if user has a profile
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .maybeSingle()
+        
+        if (!error && profile) {
+          console.log('Auth state change: user has profile')
+          setHasProfile(true)
+        } else {
+          setHasProfile(false)
+        }
+      } else {
+        setHasProfile(false)
+      }
     })
     
     return () => {
       subscription.unsubscribe()
     }
   }, [supabase])
+  
+  // Parse OAuth errors from hash fragment
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    if (hash && hash.includes('error=')) {
+      const params = new URLSearchParams(hash.slice(1));
+      const error = params.get('error');
+      const errorDescription = params.get('error_description');
+      console.error('OAuth error from hash:', { error, errorDescription });
+      
+      let decodedError = errorDescription || error;
+      if (decodedError) {
+        // Decode URL-encoded characters (like %253A -> :, %252F -> /)
+        try {
+          decodedError = decodeURIComponent(decodedError.replace(/\+/g, ' '));
+        } catch (e) {
+          console.warn('Failed to decode error description:', e);
+        }
+      }
+      
+      setAuthError(`Google OAuth failed: ${decodedError || 'Unknown error'}`);
+      // Clear hash
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, [])
   
   // OTP timer
   useEffect(() => {
@@ -150,12 +228,37 @@ export default function NeedCreationFlow() {
   
   // Auto-advance when authenticated on auth screens
   useEffect(() => {
+    console.log('Auto-advance check:', { isAuthenticated, currentStep, stepId: STEPS[currentStep].id })
     const stepId = STEPS[currentStep].id
     if (isAuthenticated && (stepId === "create_account" || stepId === "otp_verification")) {
       // Skip to "how_it_works" screen (step 5)
+      console.log('Skipping auth steps, moving to step 5')
       setCurrentStep(5)
     }
   }, [isAuthenticated, currentStep])
+
+  // Redirect to dashboard if user has a profile (already completed onboarding)
+  useEffect(() => {
+    if (hasProfile && !isLoading) {
+      console.log('User has profile, redirecting to dashboard')
+      router.push('/dashboard')
+    }
+  }, [hasProfile, isLoading, router])
+
+  // Redirect to dashboard if coming from Google OAuth with resumedAuth or new_user flag
+  useEffect(() => {
+    const resumedAuth = searchParams?.get('resumedAuth') === 'true'
+    const newUser = searchParams?.get('new_user') === 'true'
+    if (!isLoading && isAuthenticated && (resumedAuth || newUser)) {
+      console.log('OAuth flag detected, redirecting to dashboard:', { resumedAuth, newUser })
+      // Clear the query params to prevent infinite redirect
+      const newUrl = new URL(window.location.href)
+      newUrl.searchParams.delete('resumedAuth')
+      newUrl.searchParams.delete('new_user')
+      window.history.replaceState({}, '', newUrl.toString())
+      router.push('/dashboard')
+    }
+  }, [isLoading, isAuthenticated, searchParams, router])
 
   // Auto-generate impact statement when reaching AI impact screen
   useEffect(() => {
@@ -475,13 +578,22 @@ export default function NeedCreationFlow() {
   // Handle Google OAuth
   const handleGoogleAuth = async () => {
     setIsLoading(true)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${baseUrl}/auth/callback?next=/create-need`
-      }
-    })
+    setAuthError('')
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const redirectTo = `${baseUrl}/auth/callback?next=/create-need&flow=signup`
+      console.log('Google OAuth redirectTo:', redirectTo)
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      setAuthError('Failed to sign in with Google. Please check your configuration and try again.')
+      setIsLoading(false)
+    }
   }
   
 

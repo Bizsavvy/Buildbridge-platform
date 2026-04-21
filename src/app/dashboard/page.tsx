@@ -36,6 +36,8 @@ export default function DashboardPage() {
   const [selectedNeedForImpact, setSelectedNeedForImpact] = useState<any>(null)
   const [showCopied, setShowCopied] = useState(false)
   const [userName, setUserName] = useState("Artisan")
+  const [authRetryCount, setAuthRetryCount] = useState(0)
+  const MAX_AUTH_RETRIES = 3
 
   const fetchDashboardData = async () => {
     setLoading(true)
@@ -44,10 +46,21 @@ export default function DashboardPage() {
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError || !user) {
-        // Not authenticated - redirect to signup
-        router.push("/signup")
-        return
+        console.error('Dashboard auth check failed:', { userError, user })
+        if (authRetryCount < MAX_AUTH_RETRIES) {
+          setAuthRetryCount(prev => prev + 1)
+          setTimeout(() => {
+            fetchDashboardData()
+          }, 1000)
+          return
+        } else {
+          // Not authenticated - redirect to login
+          router.push(`/login?redirectTo=/dashboard`)
+          return
+        }
       }
+      setAuthRetryCount(0)
+      console.log('Dashboard auth check passed:', user.id)
 
       // Get display name from user metadata
       const fullName = user.user_metadata?.full_name || user.email?.split("@")[0] || "Artisan"

@@ -83,40 +83,83 @@ export function OnboardingForm() {
 
   // Initialize and check resume state
   useEffect(() => {
+    console.log('Onboarding init, searchParams:', {
+      resumedAuth: searchParams?.get('resumedAuth'),
+      step: searchParams?.get('step')
+    })
+    
     const initSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session on init:', session ? 'exists' : 'null', session?.user?.email)
       
       const savedData = localStorage.getItem("onboarding_state")
       if (savedData) {
         setFormData(prev => ({...prev, ...JSON.parse(savedData)}))
       }
 
+      let targetStep = 0
+      
       if (session) {
         // If we came from Google OAuth redirect
         if (searchParams?.get("resumedAuth") === "true") {
-          setCurrentStep(3)
-        } else if (currentStep < 3) {
+          console.log('Resumed auth from Google OAuth, skipping to step 3')
+          targetStep = 3
+        } else {
            // Auto skip auth step if logged in
-           setCurrentStep(3)
+           console.log('Already logged in, skipping auth step')
+           targetStep = 3
         }
       } else if (searchParams?.get("step")) {
-         setCurrentStep(parseInt(searchParams.get("step") || "0"))
+         targetStep = parseInt(searchParams.get("step") || "0")
       }
+      
+      console.log('Setting currentStep to:', targetStep)
+      setCurrentStep(targetStep)
       setLoading(false)
     }
     initSession()
+    
+    // Subscribe to auth state changes in case session loads later
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session ? 'session exists' : 'no session')
+      if (session) {
+        // If we get a session and we're still on auth steps (0-2), skip to step 3
+        setCurrentStep(prev => prev < 3 ? 3 : prev)
+        console.log('Auth state change: session detected, skipping to step 3 if needed')
+      }
+    })
+    
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
-  // Persist state on change
+  // Redirect to dashboard if user already has a profile (already completed onboarding)
   useEffect(() => {
-    if (!loading) {
-      localStorage.setItem("onboarding_state", JSON.stringify({
-        who_for: formData.who_for,
-        amount: formData.amount,
-        name: formData.name,
-      }))
+    const checkProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) return
+      
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .maybeSingle()
+      
+      if (error) {
+        console.error('Error checking profile:', error)
+        return
+      }
+      
+      if (profile) {
+        console.log('User already has profile, redirecting to dashboard')
+        router.push('/dashboard')
+      }
     }
-  }, [formData, loading])
+    
+    checkProfile()
+  }, [supabase, router])
+
 
   // Sync voice transcript with story
   const storyBaseRef = useRef("")
@@ -129,6 +172,32 @@ export function OnboardingForm() {
       }
     }
   }, [voiceInput.transcript, voiceInput.isListening])
+
+  // Check for OAuth errors from hash fragment
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    if (hash && hash.includes('error=')) {
+      const params = new URLSearchParams(hash.slice(1));
+      const error = params.get('error');
+      const errorDescription = params.get('error_description');
+      console.error('OAuth error from hash:', { error, errorDescription });
+      
+      let decodedError = errorDescription || error;
+      if (decodedError) {
+        // Decode URL-encoded characters (like %253A -> :, %252F -> /)
+        try {
+          decodedError = decodeURIComponent(decodedError.replace(/\+/g, ' '));
+        } catch (e) {
+          console.warn('Failed to decode error description:', e);
+        }
+      }
+      
+      alert(`Google OAuth failed: ${decodedError || 'Unknown error'}`);
+      // Clear hash
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, [])
 
   const nextStep = () => {
     if (currentStep < STEPS.length - 1) {
@@ -165,13 +234,21 @@ export function OnboardingForm() {
 
   const handleGoogleAuth = async () => {
     setLoading(true)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${baseUrl}/auth/callback?next=/onboarding`
-      }
-    })
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const redirectTo = `${baseUrl}/auth/callback?next=/onboarding&flow=signup`
+      console.log('Google OAuth redirectTo:', redirectTo)
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      alert('Failed to sign in with Google. Please check your configuration and try again.')
+      setLoading(false)
+    }
   }
 
   const handleSendOTP = async () => {

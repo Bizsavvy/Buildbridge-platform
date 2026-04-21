@@ -70,6 +70,32 @@ export default function SignupForm() {
     }
   }, [step])
 
+  // Check for OAuth errors from hash fragment
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    if (hash && hash.includes('error=')) {
+      const params = new URLSearchParams(hash.slice(1));
+      const error = params.get('error');
+      const errorDescription = params.get('error_description');
+      console.error('OAuth error from hash:', { error, errorDescription });
+      
+      let decodedError = errorDescription || error;
+      if (decodedError) {
+        // Decode URL-encoded characters (like %253A -> :, %252F -> /)
+        try {
+          decodedError = decodeURIComponent(decodedError.replace(/\+/g, ' '));
+        } catch (e) {
+          console.warn('Failed to decode error description:', e);
+        }
+      }
+      
+      setErrorMsg(`Google OAuth failed: ${decodedError || 'Unknown error'}`);
+      // Clear hash
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, [])
+
   const formatTime = (seconds: number) => {
     const min = Math.floor(seconds / 60)
     const sec = seconds % 60
@@ -114,6 +140,27 @@ export default function SignupForm() {
     } catch (error) {
       console.error('Error in phone user auth:', error)
       return false
+    }
+  }
+
+  // Handle Google OAuth
+  const handleGoogleAuth = async () => {
+    setIsLoading(true)
+    setErrorMsg(null)
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const redirectTo = `${baseUrl}/auth/callback?next=/onboarding&flow=signup`
+      console.log('Google OAuth redirectTo:', redirectTo)
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo
+        }
+      })
+    } catch (error) {
+      console.error('Google OAuth error:', error)
+      setErrorMsg('Failed to sign in with Google. Please check your configuration and try again.')
+      setIsLoading(false)
     }
   }
 
